@@ -7,23 +7,23 @@
   },
   "favicon": "/favicon.svg",
   "colors": {
-    "primary": "#0D9373",
-    "light": "#07C983",
-    "dark": "#0D9373",
+    "primary": "#4B367C",
+    "light": "#B6A4E0",
+    "dark": "#2A2A2A",
     "anchors": {
-      "from": "#0D9373",
-      "to": "#07C983"
+      "from": "#4B367C",
+      "to": "#B6A4E0"
     }
   },
   "topbarLinks": [
     {
       "name": "Support",
-      "url": "mailto:hi@mintlify.com"
+      "url": "https://t.me/StreamSkill"
     }
   ],
   "topbarCtaButton": {
     "name": "Dashboard",
-    "url": "https://dashboard.mintlify.com"
+    "url": "https://streamskill.pro/cabinet"
   },
   "tabs": [
     {
