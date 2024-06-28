@@ -1,0 +1,29 @@
+---
+title: 'Authentication'
+description: 'Use your API Key to authenticate your requests'
+---
+
+## Bearer Token
+
+StreamSkill API uses Bearer authentication with your API Key. You will have to send your API Key via the Authorization header.
+
+```
+Authorization: Bearer {YOUR_API_KEY}
+```
+
+Your API key can be accessed and managed in your [Security](https://streamskill.pro/en/cabinet/sessions) tab.
+
+
+### Secure your API key
+
+<Warning>
+    Because API keys are not associated with an IP address and do not expire, they must be handled with care and should not be disclosed to third parties.
+</Warning>
+
+Make sure to keep your API key secure. Do not share it in publicly accessible areas such as GitHub, client-side code, and so on.
+
+We recommend using environment variables or secrets to store your API key.
+
+<Note>
+    If you suspect that your API key has been compromised, you can remove it in your [Security](https://streamskill.pro/en/cabinet/sessions) tab.
+</Note>

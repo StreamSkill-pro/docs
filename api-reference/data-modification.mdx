@@ -1,0 +1,44 @@
+---
+title: 'Data Modification'
+description: 'Modify responses to fit your needs'
+---
+
+### Content types
+
+By default, the API returns a json response, but at the current time, we support the following response formats:
+
+- `json` - The default response format.
+- `xml` - The response in XML format.
+
+For example, to request a response in XML format, you can add the `Accept` header to your request:
+
+```http
+Accept: application/xml
+```
+
+### Response fields
+
+You can specify which fields to return in the response by using the `fields` query parameter. This parameter accepts a comma-separated list of fields to include in the response.
+
+For example, to return only the `id` and `name` fields in the response, you can use the following query parameter:
+
+```http
+GET /purchases?fields=id,name
+```
+
+### Additional fields
+
+You can also include additional fields in the response by using the `expand` query parameter. This parameter accepts a comma-separated list of fields to include in the response.
+
+For example, to include the `tarif` field in the response, you can use the following query parameter:
+
+```http
+GET /purchases?expand=tarif
+```
+
+<Note>
+    You can combine the `fields` query parameter with the `expand` query parameter to receive attributes of related resources in the response.
+    ```http
+    GET /purchases?expand=tarif&fields=id,tarif.id
+    ```
+</Note>

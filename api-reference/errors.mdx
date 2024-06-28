@@ -1,0 +1,39 @@
+---
+title: 'Errors and Rate Limiting'
+description: 'Learn about the different error codes and how to handle them'
+---
+
+The StreamSkill API uses conventional HTTP response codes to indicate the success or failure of an API request. In general, codes in the `2xx` range indicate success, codes in the `4xx` range indicate an error that failed given the information provided (e.g., a required parameter was omitted), and codes in the `5xx` range indicate an error with StreamSkill's servers.
+
+In case of an error, the API will return an error response with a JSON object containing the following fields
+(But some errors provide additional fields):
+- `name` - A human-readable name of the error.
+- `message` - A human-readable message describing the error.
+- `code` - Almost always is 0.
+- `status` - Status code of the error.
+- `type` - Type of error that was returned. (e.g. `bad_request_http_exception`)
+
+## Error codes
+
+| Code  | Description                                                                                            |
+|-------|--------------------------------------------------------------------------------------------------------|
+| `400` | Bad Request - The request was invalid or cannot be served. (e.g., invalid JSON)                        |
+| `401` | Unauthorized - Unable to authenticate.                                                                 |
+| `402` | Insufficient Funds - You don't have enough funds to do the request.                                    |
+| `404` | Not Found - The specified resource could not be found.                                                 |
+| `405` | Method Not Allowed - Action is unavailable for this order.                                             |
+| `409` | Purchase Done - Order already completed.                                                               |
+| `422` | Validation Error - The request was well-formed but was unable to be followed due to validation errors. |
+| `429` | Too Many Requests - Rate limit exceeded.                                                               |
+| `500` | Action failed - Action not performed.                                                                  |
+
+
+## Rate-limits
+
+Rate-limiting errors (`429`) happen when you are sending too many requests to the API.
+All API endpoints are rate-limited, and currently, the rate limit is set to `30 req/m` (requests per minute).
+
+Additionally, the API returns the following headers in the response:
+- `X-Rate-Limit-Limit` - The maximum number of requests that the consumer is permitted to make in a minute.
+- `X-Rate-Limit-Remaining` - The number of requests remaining in the current rate limit window.
+- `X-Rate-Limit-Reset` - The time after which the rate limit window resets in seconds.

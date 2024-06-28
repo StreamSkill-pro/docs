@@ -1,0 +1,48 @@
+---
+title: 'Pagination'
+description: 'Use pagination to return a limited set of results for each request'
+---
+
+By default, the API returns a maximum of 20 items per request. If you need more items, you can use query param `per-page` to specify the number of items to return per page.
+
+We also respond with a `Link` header that contains URLs to the current, first, last, previous, and next pages.
+
+Additionally, we include the total number of items, pages count and current page number in the response headers.
+
+
+### Query Parameters
+
+- `page` - The page number to return. Default is 1.
+- `per-page` - The number of items to return per page. Default is 20.
+
+
+
+### Pagination Headers
+
+- `Link` - Contains URLs to pages.
+- `X-Pagination-Total-Count` - The total number of items.
+- `X-Pagination-Page-Count` - The total number of pages.
+- `X-Pagination-Current-Page` - The current page number.
+- `X-Pagination-Per-Page` - The number of items per page.
+
+
+
+<RequestExample>
+    ```http page
+    GET /v1/purchases?page=2
+    ```
+
+    ```http per-page
+    GET /v1/purchases?per-page=50
+    ```
+</RequestExample>
+
+<ResponseExample>
+    ```http Response Headers
+    Link: <https://api.streamskill.pro/v1/purchases?page=2>; rel=self, <https://api.streamskill.pro/v1/purchases?page=1>; rel=first, <https://api.streamskill.pro/v1/purchases?page=500>; rel=last, <https://api.streamskill.pro/v1/purchases?page=1>; rel=prev, <https://api.streamskill.pro/v1/purchases?page=3>; rel=next
+    X-Pagination-Total-Count: 1000
+    X-Pagination-Page-Count: 500
+    X-Pagination-Current-Page: 2
+    X-Pagination-Per-Page: 20
+    ```
+</ResponseExample>
