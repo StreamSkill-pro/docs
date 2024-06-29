@@ -60,7 +60,7 @@
     {
       "group": "Basic",
       "pages": [
-        "endpoints/basic"
+        "api-reference/endpoints/basic"
       ]
     },
     {

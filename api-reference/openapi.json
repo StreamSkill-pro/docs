@@ -1,0 +1,1285 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "StreamSkill - OpenApi 3.0",
+    "description": "",
+    "termsOfService": "https://streamskill.pro/en/privacy_policy",
+    "version": "1.0.0",
+    "contact": {
+      "email": "streamskillpro@gmail.com"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.streamskill.pro/v1",
+      "description": "Production server - v1"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/me": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/Accept-Language"
+        }
+      ],
+      "get": {
+        "summary": "Get self",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "Date": {
+                "$ref": "#/components/headers/Date"
+              },
+              "Server": {
+                "$ref": "#/components/headers/Server"
+              },
+              "Content-Length": {
+                "$ref": "#/components/headers/Content-Length"
+              },
+              "Keep-Alive": {
+                "$ref": "#/components/headers/Keep-Alive"
+              },
+              "Connection": {
+                "$ref": "#/components/headers/Connection"
+              },
+              "Content-Type": {
+                "$ref": "#/components/headers/Content-Type"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserObject"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/purchases": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/Accept-Language"
+        },
+        {
+          "$ref": "#/components/parameters/expandPurchase"
+        }
+      ],
+      "get": {
+        "summary": "Get all",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/PurchasesList"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/purchases/uncomplete": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/Accept-Language"
+        },
+        {
+          "$ref": "#/components/parameters/expandPurchase"
+        }
+      ],
+      "get": {
+        "summary": "Get uncomplete",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/PurchasesList"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/purchases/create": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/Accept-Language"
+        },
+        {
+          "$ref": "#/components/parameters/expandPurchase"
+        }
+      ],
+      "post": {
+        "summary": "Create Purchase",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CartObject"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Purchase"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "422": {
+            "$ref": "#/components/responses/validationError"
+          }
+        }
+      }
+    },
+    "/purchases/{orderId}": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/orderId"
+        },
+        {
+          "$ref": "#/components/parameters/Accept-Language"
+        }
+      ],
+      "get": {
+        "summary": "Get Purchase",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/expandPurchase"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Purchase"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete purchase",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/default"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "405": {
+            "$ref": "#/components/responses/NotAllowed"
+          },
+          "409": {
+            "$ref": "#/components/responses/PurchaseDone"
+          },
+          "500": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        }
+      }
+    },
+    "/purchases/{orderId}/start": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/orderId"
+        },
+        {
+          "$ref": "#/components/parameters/Accept-Language"
+        }
+      ],
+      "post": {
+        "summary": "Start",
+        "requestBody": {
+          "content": {}
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ActionSuccess"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "405": {
+            "$ref": "#/components/responses/NotAllowed"
+          },
+          "409": {
+            "$ref": "#/components/responses/PurchaseDone"
+          },
+          "500": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        }
+      }
+    },
+    "/purchases/{orderId}/stop": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/orderId"
+        },
+        {
+          "$ref": "#/components/parameters/Accept-Language"
+        }
+      ],
+      "post": {
+        "summary": "Stop",
+        "requestBody": {
+          "content": {}
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ActionSuccess"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "405": {
+            "$ref": "#/components/responses/NotAllowed"
+          },
+          "409": {
+            "$ref": "#/components/responses/PurchaseDone"
+          },
+          "500": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        }
+      }
+    },
+    "/purchases/{orderId}/start-chatbots": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/orderId"
+        },
+        {
+          "$ref": "#/components/parameters/Accept-Language"
+        }
+      ],
+      "post": {
+        "summary": "Start Chatbots",
+        "requestBody": {
+          "content": {}
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ActionSuccess"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "405": {
+            "$ref": "#/components/responses/NotAllowed"
+          },
+          "409": {
+            "$ref": "#/components/responses/PurchaseDone"
+          },
+          "422": {
+            "$ref": "#/components/responses/validationError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        }
+      }
+    },
+    "/purchases/{orderId}/stop-chatbots": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/orderId"
+        },
+        {
+          "$ref": "#/components/parameters/Accept-Language"
+        }
+      ],
+      "post": {
+        "summary": "Stop Chatbots",
+        "requestBody": {
+          "content": {}
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ActionSuccess"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "405": {
+            "$ref": "#/components/responses/NotAllowed"
+          },
+          "409": {
+            "$ref": "#/components/responses/PurchaseDone"
+          },
+          "422": {
+            "$ref": "#/components/responses/validationError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        }
+      }
+    },
+    "/purchases/{orderId}/prolong": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/orderId"
+        },
+        {
+          "$ref": "#/components/parameters/Accept-Language"
+        }
+      ],
+      "post": {
+        "summary": "Prolong",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProlongObject"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ActionSuccess"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "402": {
+            "$ref": "#/components/responses/InsufficientFunds"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "405": {
+            "$ref": "#/components/responses/NotAllowed"
+          },
+          "409": {
+            "$ref": "#/components/responses/PurchaseDone"
+          },
+          "422": {
+            "$ref": "#/components/responses/validationError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        }
+      }
+    },
+    "/purchases/{orderId}/edit-chatbot": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/orderId"
+        },
+        {
+          "$ref": "#/components/parameters/Accept-Language"
+        }
+      ],
+      "post": {
+        "summary": "Edit Chatbot",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditChatbotObject"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ActionSuccess"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "405": {
+            "$ref": "#/components/responses/NotAllowed"
+          },
+          "409": {
+            "$ref": "#/components/responses/PurchaseDone"
+          },
+          "422": {
+            "$ref": "#/components/responses/validationError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        }
+      }
+    },
+    "/services": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/Accept-Language"
+        },
+        {
+          "$ref": "#/components/parameters/expandService"
+        }
+      ],
+      "get": {
+        "summary": "Get all",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/default"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/services/{serviceSlug}": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/serviceSlug"
+        },
+        {
+          "$ref": "#/components/parameters/Accept-Language"
+        },
+        {
+          "$ref": "#/components/parameters/expandService"
+        }
+      ],
+      "get": {
+        "summary": "Get service",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/default"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/tarifs": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/Accept-Language"
+        },
+        {
+          "$ref": "#/components/parameters/expandTarif"
+        }
+      ],
+      "get": {
+        "summary": "Get all",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/default"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/tarifs/{tarifId}": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/tarifId"
+        },
+        {
+          "$ref": "#/components/parameters/Accept-Language"
+        },
+        {
+          "$ref": "#/components/parameters/expandTarif"
+        }
+      ],
+      "get": {
+        "summary": "Get tarif",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/default"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "orderId": {
+        "name": "orderId",
+        "in": "path",
+        "required": true,
+        "description": "The ID of the order",
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "tarifId": {
+        "name": "tarifId",
+        "in": "path",
+        "required": true,
+        "description": "The ID of the tarif",
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "serviceSlug": {
+        "name": "serviceSlug",
+        "in": "path",
+        "required": true,
+        "description": "The slug of the service",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "Accept-Language": {
+        "name": "Accept-Language",
+        "in": "header",
+        "required": false,
+        "description": "The language of the response",
+        "schema": {
+          "$ref": "#/components/schemas/LanguageObject"
+        }
+      },
+      "expandPurchase": {
+        "name": "expand",
+        "in": "query",
+        "required": false,
+        "description": "The expand of the purchase (you can use multiple values separated by commas)",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "tarif",
+            "parent",
+            "api",
+            "chatbot"
+          ],
+          "example": "tarif,parent"
+        }
+      },
+      "expandService": {
+        "name": "expand",
+        "in": "query",
+        "required": false,
+        "description": "Additional data to include in the response",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "tarifs"
+          ],
+          "example": "tarifs"
+        }
+      },
+      "expandTarif": {
+        "name": "expand",
+        "in": "query",
+        "required": false,
+        "description": "Additional data to include in the response",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "panel"
+          ],
+          "example": "panel"
+        }
+      }
+    },
+    "headers": {
+      "Date": {
+        "schema": {
+          "type": "string",
+          "example": "Sat, 25 May 2024 23:59:59 GMT"
+        }
+      },
+      "Server": {
+        "schema": {
+          "type": "string",
+          "example": "Apache/2.4.38 (Debian)"
+        }
+      },
+      "Content-Length": {
+        "schema": {
+          "type": "integer",
+          "example": "100"
+        }
+      },
+      "Keep-Alive": {
+        "schema": {
+          "type": "string",
+          "example": "timeout=5, max=100"
+        }
+      },
+      "Connection": {
+        "schema": {
+          "type": "string",
+          "example": "Keep-Alive"
+        }
+      },
+      "Content-Type": {
+        "schema": {
+          "type": "string"
+        },
+        "example": "application/json; charset=UTF-8"
+      }
+    },
+    "responses": {
+      "default": {
+        "description": "OK",
+        "headers": {
+          "Date": {
+            "$ref": "#/components/headers/Date"
+          },
+          "Server": {
+            "$ref": "#/components/headers/Server"
+          },
+          "Content-Length": {
+            "$ref": "#/components/headers/Content-Length"
+          },
+          "Keep-Alive": {
+            "$ref": "#/components/headers/Keep-Alive"
+          },
+          "Connection": {
+            "$ref": "#/components/headers/Connection"
+          },
+          "Content-Type": {
+            "$ref": "#/components/headers/Content-Type"
+          }
+        }
+      },
+      "ActionSuccess": {
+        "description": "Action Success",
+        "headers": {
+          "Date": {
+            "$ref": "#/components/headers/Date"
+          },
+          "Server": {
+            "$ref": "#/components/headers/Server"
+          },
+          "Content-Length": {
+            "$ref": "#/components/headers/Content-Length"
+          },
+          "Keep-Alive": {
+            "$ref": "#/components/headers/Keep-Alive"
+          },
+          "Connection": {
+            "$ref": "#/components/headers/Connection"
+          },
+          "Content-Type": {
+            "$ref": "#/components/headers/Content-Type"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "ok",
+                  "description": "The status of the action"
+                }
+              }
+            }
+          }
+        }
+      },
+      "PurchasesList": {
+        "description": "OK",
+        "headers": {
+          "Date": {
+            "$ref": "#/components/headers/Date"
+          },
+          "Server": {
+            "$ref": "#/components/headers/Server"
+          },
+          "Content-Length": {
+            "$ref": "#/components/headers/Content-Length"
+          },
+          "Keep-Alive": {
+            "$ref": "#/components/headers/Keep-Alive"
+          },
+          "Connection": {
+            "$ref": "#/components/headers/Connection"
+          },
+          "Content-Type": {
+            "$ref": "#/components/headers/Content-Type"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/PurchaseObject"
+              }
+            }
+          }
+        }
+      },
+      "Purchase": {
+        "description": "OK",
+        "headers": {
+          "Date": {
+            "$ref": "#/components/headers/Date"
+          },
+          "Server": {
+            "$ref": "#/components/headers/Server"
+          },
+          "Content-Length": {
+            "$ref": "#/components/headers/Content-Length"
+          },
+          "Keep-Alive": {
+            "$ref": "#/components/headers/Keep-Alive"
+          },
+          "Connection": {
+            "$ref": "#/components/headers/Connection"
+          },
+          "Content-Type": {
+            "$ref": "#/components/headers/Content-Type"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/PurchaseObject"
+            }
+          }
+        }
+      },
+      "validationError": {
+        "description": "Validation Error",
+        "headers": {
+          "Date": {
+            "$ref": "#/components/headers/Date"
+          },
+          "Server": {
+            "$ref": "#/components/headers/Server"
+          },
+          "Content-Length": {
+            "$ref": "#/components/headers/Content-Length"
+          },
+          "Keep-Alive": {
+            "$ref": "#/components/headers/Keep-Alive"
+          },
+          "Connection": {
+            "$ref": "#/components/headers/Connection"
+          },
+          "Content-Type": {
+            "$ref": "#/components/headers/Content-Type"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object"
+            },
+            "example": {
+              "name": "Bad Request",
+              "errors": {
+                "tarif.id": [
+                  "Tarif not found"
+                ]
+              },
+              "code": 0,
+              "status": 422,
+              "type": "validation_exception"
+            }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "Object not Found",
+        "headers": {
+          "Date": {
+            "$ref": "#/components/headers/Date"
+          },
+          "Server": {
+            "$ref": "#/components/headers/Server"
+          },
+          "Content-Length": {
+            "$ref": "#/components/headers/Content-Length"
+          },
+          "Keep-Alive": {
+            "$ref": "#/components/headers/Keep-Alive"
+          },
+          "Connection": {
+            "$ref": "#/components/headers/Connection"
+          },
+          "Content-Type": {
+            "$ref": "#/components/headers/Content-Type"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object"
+            },
+            "example": {
+              "name": "Purchase not found",
+              "code": 0,
+              "message": "Object not found: {ID}",
+              "status": 404,
+              "type": "purchase_not_found_exception"
+            }
+          }
+        }
+      },
+      "NotAllowed": {
+        "description": "Action is not allowed for specified purchase",
+        "headers": {
+          "Date": {
+            "$ref": "#/components/headers/Date"
+          },
+          "Server": {
+            "$ref": "#/components/headers/Server"
+          },
+          "Content-Length": {
+            "$ref": "#/components/headers/Content-Length"
+          },
+          "Keep-Alive": {
+            "$ref": "#/components/headers/Keep-Alive"
+          },
+          "Connection": {
+            "$ref": "#/components/headers/Connection"
+          },
+          "Content-Type": {
+            "$ref": "#/components/headers/Content-Type"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object"
+            },
+            "example": {
+              "name": "Method Not Allowed",
+              "message": "Action is unavailable for this order",
+              "code": 0,
+              "status": 405,
+              "type": "action_unavailable"
+            }
+          }
+        }
+      },
+      "PurchaseDone": {
+        "description": "Action could not be completed because the purchase is already done",
+        "headers": {
+          "Date": {
+            "$ref": "#/components/headers/Date"
+          },
+          "Server": {
+            "$ref": "#/components/headers/Server"
+          },
+          "Content-Length": {
+            "$ref": "#/components/headers/Content-Length"
+          },
+          "Keep-Alive": {
+            "$ref": "#/components/headers/Keep-Alive"
+          },
+          "Connection": {
+            "$ref": "#/components/headers/Connection"
+          },
+          "Content-Type": {
+            "$ref": "#/components/headers/Content-Type"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object"
+            },
+            "example": {
+              "name": "Purchase Done",
+              "message": "Order already completed",
+              "code": 0,
+              "status": 409,
+              "type": "purchase_done"
+            }
+          }
+        }
+      },
+      "ApiError": {
+        "description": "API Error (Internal Server Error)",
+        "headers": {
+          "Date": {
+            "$ref": "#/components/headers/Date"
+          },
+          "Server": {
+            "$ref": "#/components/headers/Server"
+          },
+          "Content-Length": {
+            "$ref": "#/components/headers/Content-Length"
+          },
+          "Keep-Alive": {
+            "$ref": "#/components/headers/Keep-Alive"
+          },
+          "Connection": {
+            "$ref": "#/components/headers/Connection"
+          },
+          "Content-Type": {
+            "$ref": "#/components/headers/Content-Type"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object"
+            },
+            "example": {
+              "name": "Action failed",
+              "message": "Action not performed",
+              "code": 0,
+              "status": 500,
+              "type": "action_failed"
+            }
+          }
+        }
+      },
+      "InsufficientFunds": {
+        "description": "Insufficient Funds",
+        "headers": {
+          "Date": {
+            "$ref": "#/components/headers/Date"
+          },
+          "Server": {
+            "$ref": "#/components/headers/Server"
+          },
+          "Content-Length": {
+            "$ref": "#/components/headers/Content-Length"
+          },
+          "Keep-Alive": {
+            "$ref": "#/components/headers/Keep-Alive"
+          },
+          "Connection": {
+            "$ref": "#/components/headers/Connection"
+          },
+          "Content-Type": {
+            "$ref": "#/components/headers/Content-Type"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object"
+            },
+            "example": {
+              "name": "Insufficient Funds",
+              "message": "Insufficient funds",
+              "code": 0,
+              "status": 402,
+              "type": "insufficient_funds_exception",
+              "required_balance": 100,
+              "current_balance": 50
+            }
+          }
+        }
+      },
+      "Unauthorized": {
+        "description": "Unauthorized",
+        "headers": {
+          "Date": {
+            "$ref": "#/components/headers/Date"
+          },
+          "Server": {
+            "$ref": "#/components/headers/Server"
+          },
+          "Content-Length": {
+            "$ref": "#/components/headers/Content-Length"
+          },
+          "Keep-Alive": {
+            "$ref": "#/components/headers/Keep-Alive"
+          },
+          "Connection": {
+            "$ref": "#/components/headers/Connection"
+          },
+          "Content-Type": {
+            "$ref": "#/components/headers/Content-Type"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object"
+            },
+            "example": {
+              "name": "Unauthorized",
+              "message": "Your request was made with invalid credentials.",
+              "code": 0,
+              "status": 401,
+              "type": "unauthorized_http_exception"
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "LanguageObject": {
+        "type": "string",
+        "enum": [
+          "en",
+          "ru"
+        ],
+        "default": "en"
+      },
+      "CurrencyObject": {
+        "type": "string",
+        "enum": [
+          "usd",
+          "rub"
+        ],
+        "example": "usd"
+      },
+      "PurchaseStatusObject": {
+        "type": "string",
+        "enum": [
+          "created",
+          "awaiting",
+          "working",
+          "stopped",
+          "completed",
+          "failed",
+          "deleted",
+          "refunded"
+        ],
+        "example": "active",
+        "description": "The status of the purchase"
+      },
+      "UserObject": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "example": "admin"
+          },
+          "email": {
+            "type": "string",
+            "example": "Streamskillpro@gmail.com"
+          },
+          "language": {
+            "$ref": "#/components/schemas/LanguageObject"
+          },
+          "currency": {
+            "$ref": "#/components/schemas/CurrencyObject"
+          },
+          "balance": {
+            "type": "number",
+            "example": 9999
+          },
+          "discount": {
+            "type": "integer",
+            "example": 5
+          }
+        }
+      },
+      "CartObject": {
+        "type": "object",
+        "required": [
+          "tarif",
+          "channel"
+        ],
+        "properties": {
+          "tarif": {
+            "$ref": "#/components/schemas/TarifObject"
+          },
+          "channel": {
+            "type": "string",
+            "example": "twitch",
+            "description": "The channel (or another slug for tarif, for example - video id, clip id, etc.)"
+          },
+          "interval": {
+            "type": "integer",
+            "example": 10,
+            "maximum": 86400,
+            "minimum": 1,
+            "description": "The interval of the purchase (if tarif supports custom interval)"
+          },
+          "comment": {
+            "type": "string",
+            "example": "Test comment",
+            "description": "The comment for the purchase"
+          }
+        }
+      },
+      "TarifObject": {
+        "type": "object",
+        "required": [
+          "id"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "The ID of the tarif",
+            "example": 1,
+            "minimum": 1
+          },
+          "quantity": {
+            "type": "integer",
+            "description": "The quantity of the tarif (if tarif supports custom quantity)",
+            "example": 1000,
+            "minimum": 1,
+            "maximum": 10000
+          },
+          "duration": {
+            "type": "integer",
+            "description": "The duration of the tarif (if tarif supports custom duration or is hourly)",
+            "example": 24,
+            "minimum": 1,
+            "maximum": 24
+          }
+        }
+      },
+      "ProlongObject": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer",
+            "description": "The count of the prolong (if tarif hourly - count of hours, else - count of days)",
+            "example": 1,
+            "minimum": 1
+          }
+        }
+      },
+      "EditChatbotObject": {
+        "type": "object",
+        "properties": {
+          "interval": {
+            "type": "integer",
+            "description": "The interval of the chatbot",
+            "example": 10,
+            "minimum": 1
+          },
+          "mode": {
+            "type": "integer",
+            "enum": [
+              0,
+              1
+            ],
+            "description": "The mode of the chatbot (0 - random, 1 - sequential)",
+            "example": 1
+          },
+          "phrases": {
+            "type": "array",
+            "description": "The phrases of the chatbot",
+            "items": {
+              "type": "string"
+            },
+            "example": [
+              "test1",
+              "test2"
+            ]
+          }
+        }
+      },
+      "PurchaseObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "The ID of the purchase",
+            "example": 1,
+            "minimum": 1
+          },
+          "price": {
+            "type": "number",
+            "description": "The price of the purchase",
+            "example": 10
+          },
+          "currency": {
+            "$ref": "#/components/schemas/CurrencyObject"
+          },
+          "created_at": {
+            "type": "integer",
+            "format": "int64",
+            "description": "The timestamp of the purchase creation",
+            "example": 1640000000
+          },
+          "order_type": {
+            "type": "string",
+            "description": "The type of the order",
+            "example": "twitch_viewers"
+          },
+          "channel": {
+            "type": "string",
+            "description": "The channel (or another slug for tarif, for example - video id, clip id, etc.)",
+            "example": "https://www.twitch.tv/twitch"
+          },
+          "status": {
+            "$ref": "#/components/schemas/PurchaseStatusObject"
+          },
+          "service": {
+            "type": "string",
+            "enum": [
+              "twitch",
+              "trovo",
+              "kick",
+              "youtube"
+            ],
+            "description": "The service of the purchase",
+            "example": "twitch"
+          },
+          "parent": {
+            "type": "boolean",
+            "description": "The parent of the purchase",
+            "default": false
+          },
+          "api": {
+            "type": "boolean",
+            "description": "The API of the purchase",
+            "example": true
+          },
+          "chatbot": {
+            "type": "boolean",
+            "description": "The chatbot of the purchase",
+            "default": false
+          },
+          "tarif": {
+            "type": "integer",
+            "description": "The ID of the tarif",
+            "example": 1,
+            "minimum": 1
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  }
+}

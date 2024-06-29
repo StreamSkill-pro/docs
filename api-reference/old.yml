@@ -232,32 +232,6 @@ paths:
                     $ref: '#/components/responses/validationError'
                 '500':
                     $ref: '#/components/responses/ApiError'
-#    '/purchases/{orderId}/edit-api':
-#        parameters:
-#            - $ref: '#/components/parameters/orderId'
-#            - $ref: '#/components/parameters/Accept-Language'
-#        post:
-#            summary: Edit Api
-#            requestBody:
-#                content:
-#                    application/json:
-#                        schema:
-#                            type: object
-#            responses:
-#                '200':
-#                    $ref: '#/components/responses/ActionSuccess'
-#                '401':
-#                    $ref: '#/components/responses/Unauthorized'
-#                '404':
-#                    $ref: '#/components/responses/NotFound'
-#                '405':
-#                    $ref: '#/components/responses/NotAllowed'
-#                '409':
-#                    $ref: '#/components/responses/PurchaseDone'
-#                '422':
-#                    $ref: '#/components/responses/validationError'
-#                '500':
-#                    $ref: '#/components/responses/ApiError'
     '/purchases/{orderId}/edit-chatbot':
         parameters:
             - $ref: '#/components/parameters/orderId'
