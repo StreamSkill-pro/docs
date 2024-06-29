@@ -1,7 +1,6 @@
 {
   "$schema": "https://mintlify.com/schema.json",
   "name": "StreamSkill API",
-  "openapi": "openapi.yml",
   "logo": {
     "dark": "/logo/dark.svg",
     "light": "/logo/light.svg"
@@ -67,22 +66,22 @@
     {
       "group": "Purchases",
       "pages": [
-        "endpoints/purchases/all",
-        "endpoints/purchases/uncompleted",
-        "endpoints/purchases/purchase",
-        "endpoints/purchases/create",
+        "api-reference/endpoints/purchases/all",
+        "api-reference/endpoints/purchases/uncompleted",
+        "api-reference/endpoints/purchases/purchase",
+        "api-reference/endpoints/purchases/create",
         {
           "group": "Actions",
           "icon": "bolt",
           "pages": [
-            "endpoints/purchases/actions/start",
-            "endpoints/purchases/actions/stop",
-            "endpoints/purchases/actions/delete",
-            "endpoints/purchases/actions/start-chatbots",
-            "endpoints/purchases/actions/stop-chatbots",
-            "endpoints/purchases/actions/prolong",
-            "endpoints/purchases/actions/edit-api",
-            "endpoints/purchases/actions/edit-chatbots"
+            "api-reference/endpoints/purchases/actions/start",
+            "api-reference/endpoints/purchases/actions/stop",
+            "api-reference/endpoints/purchases/actions/delete",
+            "api-reference/endpoints/purchases/actions/start-chatbots",
+            "api-reference/endpoints/purchases/actions/stop-chatbots",
+            "api-reference/endpoints/purchases/actions/prolong",
+            "api-reference/endpoints/purchases/actions/edit-api",
+            "api-reference/endpoints/purchases/actions/edit-chatbots"
           ]
         }
       ]
@@ -90,19 +89,19 @@
     {
         "group": "Services",
         "pages": [
-            "endpoints/services/all",
-            "endpoints/services/service"
+            "api-reference/endpoints/services/all",
+            "api-reference/endpoints/services/service"
         ]
     },
     {
         "group": "Tariffs",
         "pages": [
-            "endpoints/tariffs/all",
-            "endpoints/tariffs/tariff"
+            "api-reference/endpoints/tariffs/all",
+            "api-reference/endpoints/tariffs/tariff"
         ]
     }
   ],
   "footerSocials": {
-    "website": "https://streamskill.pro"
+    "website": "https://streamskill.pro/en"
   }
 }
