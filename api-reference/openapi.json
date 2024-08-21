@@ -1130,7 +1130,14 @@
           "comment": {
             "type": "string",
             "example": "Test comment",
+            "default": "",
             "description": "The comment for the purchase"
+          },
+          "start": {
+            "type": "boolean",
+            "default": false,
+            "example": false,
+            "description": "Start the purchase after creation (Use only if tariff supports start)"
           }
         }
       },
@@ -1158,7 +1165,8 @@
             "description": "The duration of the tarif (if tarif supports custom duration or is hourly)",
             "example": 24,
             "minimum": 1,
-            "maximum": 24
+            "maximum": 24,
+            "default": 1
           }
         }
       },

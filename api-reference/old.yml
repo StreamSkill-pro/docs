@@ -736,7 +736,13 @@ components:
                 comment:
                     type: string
                     example: 'Test comment'
+                    default: ''
                     description: The comment for the purchase
+                start:
+                    type: boolean
+                    default: false
+                    example: false
+                    description: Start the purchase after creation (Use only if tariff supports start)
         TarifObject:
             type: object
             required:
@@ -759,6 +765,7 @@ components:
                     example: 24
                     minimum: 1
                     maximum: 24
+                    default: 1
         ProlongObject:
             type: object
             properties:
