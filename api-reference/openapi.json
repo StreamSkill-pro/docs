@@ -440,6 +440,98 @@
         }
       }
     },
+    "/purchases/{orderId}/edit-twitch-viewers": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/orderId"
+        },
+        {
+          "$ref": "#/components/parameters/Accept-Language"
+        }
+      ],
+      "post": {
+        "summary": "Edit Twitch Viewers",
+        "description": "Edit settings for a Twitch Viewers order. Only works for orders where order_type is 'viewers' and service is 'twitch'.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditTwitchViewersObject"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ActionSuccess"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "405": {
+            "$ref": "#/components/responses/NotAllowed"
+          },
+          "409": {
+            "$ref": "#/components/responses/PurchaseDone"
+          },
+          "422": {
+            "$ref": "#/components/responses/validationError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        }
+      }
+    },
+    "/purchases/{orderId}/edit-kick-viewers": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/orderId"
+        },
+        {
+          "$ref": "#/components/parameters/Accept-Language"
+        }
+      ],
+      "post": {
+        "summary": "Edit Kick Viewers",
+        "description": "Edit settings for a Kick Viewers order. Only works for orders where order_type is 'viewers' and service is 'kick'.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditKickViewersObject"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ActionSuccess"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "405": {
+            "$ref": "#/components/responses/NotAllowed"
+          },
+          "409": {
+            "$ref": "#/components/responses/PurchaseDone"
+          },
+          "422": {
+            "$ref": "#/components/responses/validationError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        }
+      }
+    },
     "/services": {
       "parameters": [
         {
@@ -816,7 +908,7 @@
               },
               "code": 0,
               "status": 422,
-              "type": "validation_exception"
+              "type": "validate_exception"
             }
           }
         }
@@ -1209,6 +1301,133 @@
               "test1",
               "test2"
             ]
+          }
+        }
+      },
+      "EditTwitchViewersObject": {
+        "type": "object",
+        "description": "All parameters are optional. Only pass the parameters you want to change.",
+        "properties": {
+          "channel": {
+            "type": "string",
+            "description": "Twitch channel name (without https://www.twitch.tv/ prefix)",
+            "example": "twitch"
+          },
+          "threads": {
+            "type": "integer",
+            "description": "Number of viewers (cannot exceed the originally purchased amount)",
+            "example": 100,
+            "minimum": 1
+          },
+          "stream_views": {
+            "type": "integer",
+            "description": "Stream views multiplier (1-10, or 1-30 if customX is enabled). Final value = stream_views * threads",
+            "example": 5,
+            "minimum": 1,
+            "maximum": 30
+          },
+          "uniq_viewers": {
+            "type": "integer",
+            "description": "Unique viewers multiplier (1-10, or 1-30 if customX is enabled). Final value = uniq_viewers * threads",
+            "example": 3,
+            "minimum": 1,
+            "maximum": 30
+          },
+          "raid": {
+            "type": "boolean",
+            "description": "Enable raid mode",
+            "example": false
+          },
+          "raid_time": {
+            "type": "integer",
+            "description": "Raid duration in minutes",
+            "example": 10,
+            "minimum": 5,
+            "maximum": 60
+          },
+          "connect_time": {
+            "type": "integer",
+            "description": "Viewer connection time in minutes (1 to min(60, threads))",
+            "example": 5,
+            "minimum": 1,
+            "maximum": 60
+          },
+          "floating_online": {
+            "type": "boolean",
+            "description": "Enable floating online",
+            "example": true
+          },
+          "geo": {
+            "type": "string",
+            "description": "Country code for geo targeting",
+            "enum": ["auto", "us", "br", "ru", "mx", "tr", "de", "gb", "it", "ca", "ua", "by", "pt", "ar", "es", "ae", "pl", "fr", "ch", "kz", "ge", "eg"],
+            "example": "auto"
+          },
+          "geo_percent": {
+            "type": "integer",
+            "description": "Geo percentage",
+            "example": 50,
+            "minimum": 0,
+            "maximum": 100
+          },
+          "chatlist": {
+            "type": "integer",
+            "description": "Chatlist percentage",
+            "example": 30,
+            "minimum": 0,
+            "maximum": 100
+          }
+        }
+      },
+      "EditKickViewersObject": {
+        "type": "object",
+        "description": "All parameters are optional. Only pass the parameters you want to change.",
+        "properties": {
+          "channel": {
+            "type": "string",
+            "description": "Kick channel name (without https://kick.com/ prefix)",
+            "example": "kick"
+          },
+          "threads": {
+            "type": "integer",
+            "description": "Number of viewers (cannot exceed the originally purchased amount)",
+            "example": 100,
+            "minimum": 1
+          },
+          "raid": {
+            "type": "boolean",
+            "description": "Enable raid mode",
+            "example": false
+          },
+          "raid_time": {
+            "type": "integer",
+            "description": "Raid duration in minutes",
+            "example": 10,
+            "minimum": 5,
+            "maximum": 60
+          },
+          "connect_time": {
+            "type": "integer",
+            "description": "Viewer connection time in minutes (1 to min(60, threads))",
+            "example": 5,
+            "minimum": 1,
+            "maximum": 60
+          },
+          "floating_online": {
+            "type": "boolean",
+            "description": "Enable floating online",
+            "example": true
+          },
+          "geo": {
+            "type": "string",
+            "description": "Country code for geo targeting",
+            "enum": ["auto", "us", "br", "ru", "mx", "tr", "de", "gb", "it", "ca", "ua", "by", "pt", "ar", "es"],
+            "example": "auto"
+          },
+          "stats_viewers": {
+            "type": "boolean",
+            "description": "Enable viewer statistics",
+            "example": true
           }
         }
       },
