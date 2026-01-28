@@ -269,6 +269,68 @@
         }
       }
     },
+    "/purchases/bulk-start": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/Accept-Language"
+        }
+      ],
+      "post": {
+        "summary": "Bulk Start",
+        "description": "Start multiple purchases at once. Maximum 100 orders per request.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkIdsObject"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/BulkActionResult"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "422": {
+            "$ref": "#/components/responses/validationError"
+          }
+        }
+      }
+    },
+    "/purchases/bulk-stop": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/Accept-Language"
+        }
+      ],
+      "post": {
+        "summary": "Bulk Stop",
+        "description": "Stop multiple purchases at once. Maximum 100 orders per request.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkIdsObject"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/BulkActionResult"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "422": {
+            "$ref": "#/components/responses/validationError"
+          }
+        }
+      }
+    },
     "/purchases/{orderId}/start-chatbots": {
       "parameters": [
         {
@@ -772,6 +834,36 @@
           }
         }
       },
+      "BulkActionResult": {
+        "description": "Bulk Action Result",
+        "headers": {
+          "Date": {
+            "$ref": "#/components/headers/Date"
+          },
+          "Server": {
+            "$ref": "#/components/headers/Server"
+          },
+          "Content-Length": {
+            "$ref": "#/components/headers/Content-Length"
+          },
+          "Keep-Alive": {
+            "$ref": "#/components/headers/Keep-Alive"
+          },
+          "Connection": {
+            "$ref": "#/components/headers/Connection"
+          },
+          "Content-Type": {
+            "$ref": "#/components/headers/Content-Type"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/BulkActionResultObject"
+            }
+          }
+        }
+      },
       "ActionSuccess": {
         "description": "Action Success",
         "headers": {
@@ -1270,6 +1362,53 @@
             "description": "The count of the prolong (if tarif hourly - count of hours, else - count of days)",
             "example": 1,
             "minimum": 1
+          }
+        }
+      },
+      "BulkIdsObject": {
+        "type": "object",
+        "required": ["ids"],
+        "properties": {
+          "ids": {
+            "type": "array",
+            "description": "Array of order IDs (maximum 100)",
+            "items": {
+              "type": "integer"
+            },
+            "minItems": 1,
+            "maxItems": 100,
+            "example": [1, 2, 3]
+          }
+        }
+      },
+      "BulkActionResultObject": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "array",
+            "description": "Array of successfully processed order IDs",
+            "items": {
+              "type": "integer"
+            },
+            "example": [1, 2]
+          },
+          "failed": {
+            "type": "array",
+            "description": "Array of failed orders with error messages",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "description": "Order ID"
+                },
+                "error": {
+                  "type": "string",
+                  "description": "Error message"
+                }
+              }
+            },
+            "example": [{"id": 3, "error": "Order not found"}]
           }
         }
       },

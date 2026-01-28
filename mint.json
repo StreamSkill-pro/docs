@@ -76,6 +76,8 @@
           "pages": [
             "api-reference/endpoints/purchases/actions/start",
             "api-reference/endpoints/purchases/actions/stop",
+            "api-reference/endpoints/purchases/actions/bulk-start",
+            "api-reference/endpoints/purchases/actions/bulk-stop",
             "api-reference/endpoints/purchases/actions/delete",
             "api-reference/endpoints/purchases/actions/start-chatbots",
             "api-reference/endpoints/purchases/actions/stop-chatbots",
