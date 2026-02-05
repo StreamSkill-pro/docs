@@ -28,12 +28,57 @@ In case of an error, the API will return an error response with a JSON object co
 | `500` | Action failed - Action not performed.                                                                  |
 
 
-## Rate-limits
+## Rate Limits
 
 Rate-limiting errors (`429`) happen when you are sending too many requests to the API.
-All API endpoints are rate-limited, and currently, the rate limit is set to `30 req/m` (requests per minute).
+All API endpoints are rate-limited using a **Token Bucket** algorithm.
 
-Additionally, the API returns the following headers in the response:
-- `X-Rate-Limit-Limit` - The maximum number of requests that the consumer is permitted to make in a minute.
-- `X-Rate-Limit-Remaining` - The number of requests remaining in the current rate limit window.
-- `X-Rate-Limit-Reset` - The time after which the rate limit window resets in seconds.
+### Default Limits
+
+| User Type      | Burst (max requests) | Refill Rate       |
+|----------------|----------------------|-------------------|
+| Authenticated  | 30 requests          | 2 requests/sec    |
+| Guest (no token) | 5 requests         | 0.5 requests/sec  |
+
+This means authenticated users can make up to 30 requests instantly, then 2 additional requests per second as tokens refill.
+
+### Response Headers
+
+The API returns the following headers with every response:
+
+| Header | Description |
+|--------|-------------|
+| `X-Rate-Limit-Limit` | Maximum number of requests (bucket capacity) |
+| `X-Rate-Limit-Remaining` | Requests remaining in current bucket |
+| `X-Rate-Limit-Reset` | Seconds until bucket is fully refilled (back to capacity) |
+
+On `429` responses, an additional header is returned:
+
+| Header | Description |
+|--------|-------------|
+| `Retry-After` | Seconds to wait before the next request will be allowed |
+
+### Handling Rate Limits
+
+When you receive a `429` response, wait for the number of seconds specified in the `Retry-After` header before retrying.
+
+#### Example 429 Response
+
+```
+HTTP/1.1 429 Too Many Requests
+X-Rate-Limit-Limit: 30
+X-Rate-Limit-Remaining: 0
+X-Rate-Limit-Reset: 15
+Retry-After: 1
+Content-Type: application/json; charset=UTF-8
+```
+
+````json
+{
+    "name": "Too Many Requests",
+    "code": 0,
+    "message": "Rate limit exceeded.",
+    "status": 429,
+    "type": "too_many_requests_http_exception"
+}
+````
