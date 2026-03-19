@@ -1,0 +1,115 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "StreamSkill API",
+  "colors": {
+    "primary": "#4B367C",
+    "light": "#B6A4E0",
+    "dark": "#2A2A2A"
+  },
+  "favicon": "/favicon.svg",
+  "navigation": {
+    "versions": [
+      {
+        "version": "v1",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "introduction"
+            ]
+          },
+          {
+            "group": "API Documentation",
+            "pages": [
+              "api-reference/authentication",
+              "api-reference/pagination",
+              "api-reference/data-modification",
+              "api-reference/languages",
+              "api-reference/errors"
+            ]
+          },
+          {
+            "group": "Basic",
+            "pages": [
+              "api-reference/endpoints/basic"
+            ]
+          },
+          {
+            "group": "Purchases",
+            "pages": [
+              "api-reference/endpoints/purchases/all",
+              "api-reference/endpoints/purchases/uncompleted",
+              "api-reference/endpoints/purchases/purchase",
+              "api-reference/endpoints/purchases/create",
+              {
+                "group": "Actions",
+                "icon": "bolt",
+                "pages": [
+                  "api-reference/endpoints/purchases/actions/start",
+                  "api-reference/endpoints/purchases/actions/stop",
+                  "api-reference/endpoints/purchases/actions/bulk-start",
+                  "api-reference/endpoints/purchases/actions/bulk-stop",
+                  "api-reference/endpoints/purchases/actions/delete",
+                  "api-reference/endpoints/purchases/actions/start-chatbots",
+                  "api-reference/endpoints/purchases/actions/stop-chatbots",
+                  "api-reference/endpoints/purchases/actions/prolong",
+                  "api-reference/endpoints/purchases/actions/edit-twitch-viewers",
+                  "api-reference/endpoints/purchases/actions/edit-kick-viewers",
+                  "api-reference/endpoints/purchases/actions/edit-chatbots"
+                ]
+              }
+            ]
+          },
+          {
+            "group": "Services",
+            "pages": [
+              "api-reference/endpoints/services/all",
+              "api-reference/endpoints/services/service"
+            ]
+          },
+          {
+            "group": "Tariffs",
+            "pages": [
+              "api-reference/endpoints/tariffs/all",
+              "api-reference/endpoints/tariffs/tariff"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg"
+  },
+  "api": {
+    "openapi": "api-reference/openapi.json",
+    "mdx": {
+      "auth": {
+        "method": "bearer"
+      }
+    }
+  },
+  "appearance": {
+    "default": "dark"
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "Support",
+        "href": "https://t.me/StreamSkill"
+      }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "Dashboard",
+      "href": "https://streamskill.pro/en/cabinet"
+    }
+  },
+  "footer": {
+    "socials": {
+      "website": "https://streamskill.pro/en"
+    }
+  }
+}
