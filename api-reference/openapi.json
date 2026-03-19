@@ -1311,6 +1311,13 @@
             "minimum": 1,
             "description": "The interval of the purchase (if tarif supports custom interval)"
           },
+          "lang": {
+            "type": "string",
+            "default": "auto",
+            "example": "en",
+            "description": "Stream language for AI Chatbots. Only applicable for AI Chatbots tariffs. See the list of supported languages below.",
+            "enum": ["auto", "en", "ru", "uk","de", "es", "fr", "it", "pt", "pl", "tr", "ar", "zh", "ja", "ko", "hi", "th", "vi", "id", "ms", "tl", "ca", "da", "nl", "no", "ro", "sk", "fi", "sv", "cs", "el", "bg", "hu", "zh-hk", "other"]
+          },
           "comment": {
             "type": "string",
             "example": "Test comment",
