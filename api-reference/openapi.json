@@ -594,6 +594,52 @@
         }
       }
     },
+    "/purchases/{orderId}/edit-ai-chatbots": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/orderId"
+        },
+        {
+          "$ref": "#/components/parameters/Accept-Language"
+        }
+      ],
+      "post": {
+        "summary": "Edit AI Chatbots",
+        "description": "Edit settings for an AI Chatbots order. Only works for orders where order_type is 'ai_chatbots'.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditAiChatbotsObject"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ActionSuccess"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "405": {
+            "$ref": "#/components/responses/NotAllowed"
+          },
+          "409": {
+            "$ref": "#/components/responses/PurchaseDone"
+          },
+          "422": {
+            "$ref": "#/components/responses/validationError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        }
+      }
+    },
     "/services": {
       "parameters": [
         {
@@ -1637,6 +1683,30 @@
             "type": "boolean",
             "description": "Enable viewer statistics",
             "example": true
+          }
+        }
+      },
+      "EditAiChatbotsObject": {
+        "type": "object",
+        "description": "All parameters are optional. Only pass the parameters you want to change.",
+        "properties": {
+          "language": {
+            "type": "string",
+            "description": "Speech recognition language code (e.g. 'auto', 'en', 'ru'). See /tariffs for available options.",
+            "example": "auto"
+          },
+          "count": {
+            "type": "integer",
+            "description": "Number of chatbots (cannot exceed the originally purchased amount)",
+            "example": 50,
+            "minimum": 1
+          },
+          "interval": {
+            "type": "integer",
+            "description": "Interval between messages in seconds. Minimum depends on count: ceil(60 / count), at least 1.",
+            "example": 10,
+            "minimum": 1,
+            "maximum": 60
           }
         }
       },
