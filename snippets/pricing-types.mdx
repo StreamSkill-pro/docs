@@ -1,0 +1,24 @@
+## Pricing types
+
+Each tariff has a `pricing_type` field that indicates how the price is calculated:
+
+### Standard pricing (`pricing_type: "standard"`)
+
+Price is calculated as: `base_price / count * quantity * duration * volume_discount * personal_discount`
+
+Use the `discounts` field to get volume discount tiers.
+
+### Graduated pricing (`pricing_type: "graduated"`)
+
+Price is a fixed amount based on quantity thresholds. The `graduated_prices` field contains an object where keys are quantity thresholds and values are prices **with all discounts already applied**.
+
+For example, if `graduated_prices` is `{"0": 135, "101": 180, "201": 270}`:
+- Ordering 50 units costs **135** per hour
+- Ordering 150 units costs **180** per hour
+- Ordering 250 units costs **270** per hour
+
+For hourly tariffs, multiply the tier price by the number of hours.
+
+<Note>
+  The `graduated_prices` values already include your personal discount and any active promotions. The `discounts` field is not applicable for graduated pricing tariffs.
+</Note>

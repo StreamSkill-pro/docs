@@ -655,7 +655,7 @@
         "summary": "Get all",
         "responses": {
           "200": {
-            "$ref": "#/components/responses/default"
+            "$ref": "#/components/responses/TarifsList"
           },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
@@ -679,7 +679,7 @@
         "summary": "Get tarif",
         "responses": {
           "200": {
-            "$ref": "#/components/responses/default"
+            "$ref": "#/components/responses/Tarif"
           },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
@@ -831,6 +831,69 @@
           },
           "Content-Type": {
             "$ref": "#/components/headers/Content-Type"
+          }
+        }
+      },
+      "TarifsList": {
+        "description": "OK",
+        "headers": {
+          "Date": {
+            "$ref": "#/components/headers/Date"
+          },
+          "Server": {
+            "$ref": "#/components/headers/Server"
+          },
+          "Content-Length": {
+            "$ref": "#/components/headers/Content-Length"
+          },
+          "Keep-Alive": {
+            "$ref": "#/components/headers/Keep-Alive"
+          },
+          "Connection": {
+            "$ref": "#/components/headers/Connection"
+          },
+          "Content-Type": {
+            "$ref": "#/components/headers/Content-Type"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/TarifResponseObject"
+              }
+            }
+          }
+        }
+      },
+      "Tarif": {
+        "description": "OK",
+        "headers": {
+          "Date": {
+            "$ref": "#/components/headers/Date"
+          },
+          "Server": {
+            "$ref": "#/components/headers/Server"
+          },
+          "Content-Length": {
+            "$ref": "#/components/headers/Content-Length"
+          },
+          "Keep-Alive": {
+            "$ref": "#/components/headers/Keep-Alive"
+          },
+          "Connection": {
+            "$ref": "#/components/headers/Connection"
+          },
+          "Content-Type": {
+            "$ref": "#/components/headers/Content-Type"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/TarifResponseObject"
+            }
           }
         }
       },
@@ -1573,6 +1636,125 @@
           "stats_viewers": {
             "type": "boolean",
             "description": "Enable viewer statistics",
+            "example": true
+          }
+        }
+      },
+      "GraduatedPricesObject": {
+        "type": "object",
+        "description": "Graduated pricing tiers. Keys are quantity thresholds, values are prices (with all discounts applied). Only present when pricing_type is \"graduated\".",
+        "additionalProperties": {
+          "type": "number"
+        },
+        "example": {
+          "0": 135,
+          "101": 180,
+          "201": 270
+        }
+      },
+      "TarifResponseObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "The ID of the tarif",
+            "example": 1
+          },
+          "title": {
+            "type": "string",
+            "description": "The title of the tarif (localized)",
+            "example": "AI Chatbot"
+          },
+          "text": {
+            "type": "array",
+            "description": "Description lines (localized)",
+            "items": {
+              "type": "string"
+            },
+            "example": ["Up to 350 chatbots", "AI-powered chat"]
+          },
+          "count": {
+            "description": "Quantity info. For custom_count tariffs returns {min, max}, otherwise a single integer.",
+            "oneOf": [
+              {
+                "type": "integer",
+                "example": 100
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "min": {
+                    "type": "integer",
+                    "example": 10
+                  },
+                  "max": {
+                    "type": "integer",
+                    "example": 350
+                  }
+                }
+              }
+            ]
+          },
+          "price": {
+            "type": "number",
+            "description": "The calculated price (with all discounts applied). For standard pricing — price for default quantity. For graduated pricing — price for the minimum tier.",
+            "example": 135
+          },
+          "type": {
+            "type": "string",
+            "description": "The group_id of the tarif",
+            "example": "ai_chatbots"
+          },
+          "hourly": {
+            "type": "boolean",
+            "description": "Whether the tarif supports hourly duration selection",
+            "example": true
+          },
+          "pricing_type": {
+            "type": "string",
+            "enum": ["standard", "graduated"],
+            "description": "Pricing model. `standard` — price is calculated as (base_price / count * quantity * duration * discounts). `graduated` — fixed price per quantity tier * duration * discounts.",
+            "example": "graduated"
+          },
+          "graduated_prices": {
+            "description": "Graduated pricing tiers with discounts applied. `null` for standard pricing tariffs.",
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/GraduatedPricesObject"
+              }
+            ]
+          },
+          "discounts": {
+            "type": "object",
+            "description": "Volume discount tiers (quantity threshold → discount percentage). Only applicable for standard pricing.",
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "example": {
+              "1000": 20,
+              "500": 10,
+              "1": 0
+            }
+          },
+          "link": {
+            "type": "object",
+            "properties": {
+              "prefix": {
+                "type": "string",
+                "description": "Channel URL prefix",
+                "example": "https://www.twitch.tv/"
+              },
+              "placeholder": {
+                "type": "string",
+                "description": "Channel input placeholder",
+                "example": "twitch"
+              }
+            }
+          },
+          "panel": {
+            "type": "boolean",
+            "description": "Whether the tarif supports panel",
             "example": true
           }
         }
