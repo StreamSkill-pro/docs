@@ -1376,11 +1376,11 @@
         "properties": {
           "username": {
             "type": "string",
-            "example": "admin"
+            "example": "username"
           },
           "email": {
             "type": "string",
-            "example": "Streamskillpro@gmail.com"
+            "example": "test@mail.com"
           },
           "language": {
             "$ref": "#/components/schemas/LanguageObject"
