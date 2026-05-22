@@ -1615,7 +1615,7 @@
           "geo": {
             "type": "string",
             "description": "Country code for geo targeting",
-            "enum": ["auto", "us", "br", "ru", "mx", "tr", "de", "gb", "it", "ca", "ua", "by", "pt", "ar", "es", "ae", "pl", "fr", "ch", "kz", "ge", "eg"],
+            "enum": ["auto", "us", "br", "ru", "mx", "tr", "de", "gb", "it", "ca", "ua", "by", "pt", "ar", "es", "ae", "pl", "fr", "ch", "kz", "ge", "eg", "sa"],
             "example": "auto"
           },
           "geo_percent": {
@@ -1676,7 +1676,7 @@
           "geo": {
             "type": "string",
             "description": "Country code for geo targeting",
-            "enum": ["auto", "us", "br", "ru", "mx", "tr", "de", "gb", "it", "ca", "ua", "by", "pt", "ar", "es"],
+            "enum": ["auto", "us", "br", "ru", "mx", "tr", "de", "gb", "it", "ca", "ua", "by", "pt", "ar", "es", "sa"],
             "example": "auto"
           },
           "stats_viewers": {
