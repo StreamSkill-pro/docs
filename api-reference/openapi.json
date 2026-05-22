@@ -1561,7 +1561,7 @@
       },
       "EditTwitchViewersObject": {
         "type": "object",
-        "description": "All parameters are optional. Only pass the parameters you want to change.",
+        "description": "All parameters are optional. Only pass the parameters you want to change. When online_mode is \"manual\" (or the order is already in manual mode), the manual_chart, manual_chart_randomization, manual_chart_end_action and manual_chart_end_param fields become required.",
         "properties": {
           "channel": {
             "type": "string",
@@ -1607,10 +1607,45 @@
             "minimum": 1,
             "maximum": 60
           },
-          "floating_online": {
-            "type": "boolean",
-            "description": "Enable floating online",
-            "example": true
+          "online_mode": {
+            "type": "string",
+            "description": "Online mode (replaces the removed floating_online flag). \"smooth_only\" — smooth connection only (equivalent of the old floating_online: false). \"smooth_floating\" — smooth connection plus floating viewers (equivalent of the old floating_online: true). \"manual\" — custom online chart, requires the manual_chart_* fields.",
+            "enum": ["smooth_only", "smooth_floating", "manual"],
+            "example": "smooth_floating"
+          },
+          "manual_chart": {
+            "type": "object",
+            "description": "Custom online chart. Required when online_mode is \"manual\" (or the order is already in manual mode). Map where keys are minutes (integers) and values are viewer counts. Must contain at least 2 points, the first point must be at minute 0, and the chart duration (largest minute key) must be between 10 and 180 minutes.",
+            "minProperties": 2,
+            "additionalProperties": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "example": {
+              "0": 20,
+              "5": 100,
+              "30": 80
+            }
+          },
+          "manual_chart_randomization": {
+            "type": "integer",
+            "description": "Randomization percentage for the custom chart. Required when online_mode is \"manual\" (or the order is already in manual mode).",
+            "example": 15,
+            "minimum": 0,
+            "maximum": 100
+          },
+          "manual_chart_end_action": {
+            "type": "string",
+            "description": "Action performed when the custom chart ends. Required when online_mode is \"manual\" (or the order is already in manual mode). \"max_work\" — keep running, \"repeat\" — replay the chart, \"shutdown\" — finish the order.",
+            "enum": ["max_work", "repeat", "shutdown"],
+            "example": "repeat"
+          },
+          "manual_chart_end_param": {
+            "type": "integer",
+            "description": "Duration in minutes of the end action. Required when online_mode is \"manual\" (or the order is already in manual mode). For \"repeat\" it must not exceed the chart duration. When manual_chart_end_action is \"max_work\" and this field is omitted, it defaults to 0.",
+            "example": 10,
+            "minimum": 0,
+            "maximum": 60
           },
           "geo": {
             "type": "string",
