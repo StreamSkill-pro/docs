@@ -548,6 +548,52 @@
         }
       }
     },
+    "/purchases/{orderId}/edit-twitch-followers": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/orderId"
+        },
+        {
+          "$ref": "#/components/parameters/Accept-Language"
+        }
+      ],
+      "post": {
+        "summary": "Edit Twitch Followers",
+        "description": "Edit settings for a Twitch Followers order. Only works for orders where order_type is 'followers' and service is 'twitch'. Empty bodies and unchanged values are accepted and return ok.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditTwitchFollowersObject"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ActionSuccess"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "405": {
+            "$ref": "#/components/responses/NotAllowed"
+          },
+          "409": {
+            "$ref": "#/components/responses/PurchaseDone"
+          },
+          "422": {
+            "$ref": "#/components/responses/validationError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ApiError"
+          }
+        }
+      }
+    },
     "/purchases/{orderId}/edit-kick-viewers": {
       "parameters": [
         {
@@ -1667,6 +1713,34 @@
             "minimum": 0,
             "maximum": 100
           }
+        }
+      },
+      "EditTwitchFollowersObject": {
+        "type": "object",
+        "description": "All parameters are optional. Only pass the Twitch Followers settings you want to change. The public API intentionally does not support count for this endpoint.",
+        "properties": {
+          "channel": {
+            "type": "string",
+            "description": "Twitch channel slug without the https://www.twitch.tv/ prefix. Channel changes are available within the order limit. Value must be non-empty after trim.",
+            "example": "new_channel"
+          },
+          "timing": {
+            "type": "integer",
+            "description": "Interval between followers in seconds.",
+            "example": 45,
+            "minimum": 1,
+            "maximum": 86400
+          },
+          "floating_interval": {
+            "type": "boolean",
+            "description": "Enable a floating interval of +/-25% from timing.",
+            "example": true
+          }
+        },
+        "example": {
+          "channel": "new_channel",
+          "timing": 45,
+          "floating_interval": true
         }
       },
       "EditKickViewersObject": {

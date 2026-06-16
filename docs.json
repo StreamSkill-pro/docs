@@ -55,6 +55,7 @@
                   "api-reference/endpoints/purchases/actions/stop-chatbots",
                   "api-reference/endpoints/purchases/actions/prolong",
                   "api-reference/endpoints/purchases/actions/edit-twitch-viewers",
+                  "api-reference/endpoints/purchases/actions/edit-twitch-followers",
                   "api-reference/endpoints/purchases/actions/edit-kick-viewers",
                   "api-reference/endpoints/purchases/actions/edit-ai-chatbots",
                   "api-reference/endpoints/purchases/actions/edit-chatbots"
