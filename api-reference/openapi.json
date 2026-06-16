@@ -1724,7 +1724,7 @@
             "description": "Twitch channel slug without the https://www.twitch.tv/ prefix. Channel changes are available within the order limit. Value must be non-empty after trim.",
             "example": "new_channel"
           },
-          "timing": {
+          "interval": {
             "type": "integer",
             "description": "Interval between followers in seconds.",
             "example": 45,
@@ -1733,13 +1733,13 @@
           },
           "floating_interval": {
             "type": "boolean",
-            "description": "Enable a floating interval of +/-25% from timing.",
+            "description": "Enable a floating interval of +/-25% from interval.",
             "example": true
           }
         },
         "example": {
           "channel": "new_channel",
-          "timing": 45,
+          "interval": 45,
           "floating_interval": true
         }
       },
