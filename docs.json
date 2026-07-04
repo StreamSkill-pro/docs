@@ -40,6 +40,7 @@
             "pages": [
               "api-reference/endpoints/purchases/all",
               "api-reference/endpoints/purchases/uncompleted",
+              "api-reference/endpoints/purchases/bulk",
               "api-reference/endpoints/purchases/purchase",
               "api-reference/endpoints/purchases/create",
               {

@@ -124,6 +124,33 @@
         }
       }
     },
+    "/purchases/bulk": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/Accept-Language"
+        },
+        {
+          "$ref": "#/components/parameters/bulkPurchaseIds"
+        },
+        {
+          "$ref": "#/components/parameters/expandPurchase"
+        }
+      ],
+      "get": {
+        "summary": "Get bulk purchases",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/BulkPurchases"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "422": {
+            "$ref": "#/components/responses/BulkPurchasesValidationError"
+          }
+        }
+      }
+    },
     "/purchases/create": {
       "parameters": [
         {
@@ -856,6 +883,16 @@
           "default": 20
         }
       },
+      "bulkPurchaseIds": {
+        "name": "ids",
+        "in": "query",
+        "required": true,
+        "description": "Comma-separated positive order IDs. Use `ids=1,2,3`. Maximum 100 IDs.",
+        "schema": {
+          "type": "string",
+          "example": "1,2,3"
+        }
+      },
       "expandPurchase": {
         "name": "expand",
         "in": "query",
@@ -1124,6 +1161,71 @@
           }
         }
       },
+      "BulkPurchases": {
+        "description": "OK",
+        "headers": {
+          "Date": {
+            "$ref": "#/components/headers/Date"
+          },
+          "Server": {
+            "$ref": "#/components/headers/Server"
+          },
+          "Content-Length": {
+            "$ref": "#/components/headers/Content-Length"
+          },
+          "Keep-Alive": {
+            "$ref": "#/components/headers/Keep-Alive"
+          },
+          "Connection": {
+            "$ref": "#/components/headers/Connection"
+          },
+          "Content-Type": {
+            "$ref": "#/components/headers/Content-Type"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/BulkPurchasesResponseObject"
+            },
+            "example": {
+              "items": [
+                {
+                  "id": 101,
+                  "price": 10,
+                  "currency": "usd",
+                  "created_at": 1640000000,
+                  "order_type": "twitch_viewers",
+                  "status": "working",
+                  "channel": "example_channel",
+                  "service": "twitch",
+                  "parent": false,
+                  "api": true,
+                  "chatbot": false,
+                  "tarif": 1
+                },
+                {
+                  "id": 102,
+                  "price": 15,
+                  "currency": "usd",
+                  "created_at": 1640000100,
+                  "order_type": "twitch_viewers",
+                  "status": "created",
+                  "channel": "another_channel",
+                  "service": "twitch",
+                  "parent": false,
+                  "api": false,
+                  "chatbot": false,
+                  "tarif": 1
+                }
+              ],
+              "missing_ids": [
+                999
+              ]
+            }
+          }
+        }
+      },
       "Purchase": {
         "description": "OK",
         "headers": {
@@ -1150,6 +1252,71 @@
           "application/json": {
             "schema": {
               "$ref": "#/components/schemas/PurchaseObject"
+            }
+          }
+        }
+      },
+      "BulkPurchasesValidationError": {
+        "description": "Validation Error",
+        "headers": {
+          "Date": {
+            "$ref": "#/components/headers/Date"
+          },
+          "Server": {
+            "$ref": "#/components/headers/Server"
+          },
+          "Content-Length": {
+            "$ref": "#/components/headers/Content-Length"
+          },
+          "Keep-Alive": {
+            "$ref": "#/components/headers/Keep-Alive"
+          },
+          "Connection": {
+            "$ref": "#/components/headers/Connection"
+          },
+          "Content-Type": {
+            "$ref": "#/components/headers/Content-Type"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object"
+            },
+            "examples": {
+              "missingIds": {
+                "summary": "Missing ids or unsupported format",
+                "value": {
+                  "name": "Validation Error",
+                  "errors": {
+                    "ids": [
+                      "You must provide comma-separated order IDs."
+                    ]
+                  },
+                  "status": 422,
+                  "type": "validate_exception"
+                }
+              },
+              "invalidIds": {
+                "summary": "Invalid IDs",
+                "value": {
+                  "errors": {
+                    "ids": [
+                      "Order IDs must be numbers."
+                    ]
+                  }
+                }
+              },
+              "tooManyIds": {
+                "summary": "More than 100 IDs",
+                "value": {
+                  "errors": {
+                    "ids": [
+                      "Maximum number of orders is 100."
+                    ]
+                  }
+                }
+              }
             }
           }
         }
@@ -1575,6 +1742,33 @@
             "minItems": 1,
             "maxItems": 100,
             "example": [1, 2, 3]
+          }
+        }
+      },
+      "BulkPurchasesResponseObject": {
+        "type": "object",
+        "required": [
+          "items",
+          "missing_ids"
+        ],
+        "properties": {
+          "items": {
+            "type": "array",
+            "description": "Purchases found for the current user.",
+            "items": {
+              "$ref": "#/components/schemas/PurchaseObject"
+            }
+          },
+          "missing_ids": {
+            "type": "array",
+            "description": "IDs that were not found or do not belong to the current user.",
+            "items": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "example": [
+              999
+            ]
           }
         }
       },
