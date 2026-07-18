@@ -1941,6 +1941,12 @@
             "example": 30,
             "minimum": 0,
             "maximum": 100
+          },
+          "preferred_account_group": {
+            "type": "integer",
+            "description": "Preferred account group. Use 0 for the default account group or a positive ID for one of the user's account groups.",
+            "example": 0,
+            "minimum": 0
           }
         }
       },
@@ -1964,12 +1970,19 @@
             "type": "boolean",
             "description": "Enable a floating interval of +/-25% from interval.",
             "example": true
+          },
+          "preferred_account_group": {
+            "type": "integer",
+            "description": "Preferred account group. Use 0 for the default account group or a positive ID for one of the user's account groups.",
+            "example": 0,
+            "minimum": 0
           }
         },
         "example": {
           "channel": "new_channel",
           "interval": 45,
-          "floating_interval": true
+          "floating_interval": true,
+          "preferred_account_group": 0
         }
       },
       "EditKickViewersObject": {
@@ -2045,6 +2058,12 @@
             "example": 10,
             "minimum": 1,
             "maximum": 60
+          },
+          "preferred_account_group": {
+            "type": "integer",
+            "description": "Preferred account group. Use 0 for the default account group or a positive ID for one of the user's account groups.",
+            "example": 0,
+            "minimum": 0
           }
         }
       },
