@@ -1971,6 +1971,12 @@
             "description": "Enable a floating interval of +/-25% from interval.",
             "example": true
           },
+          "account_priority": {
+            "type": "string",
+            "description": "Account selection priority. All orders use 'random' by default. 'random' uses all available accounts, resulting in fewer follower losses and better longevity. 'chatbot' uses chatbot-eligible accounts, resulting in more follower losses and lower longevity. If omitted, the current value remains unchanged.",
+            "enum": ["random", "chatbot"],
+            "example": "random"
+          },
           "preferred_account_group": {
             "type": "integer",
             "description": "Preferred account group. Use 0 for the default account group or a positive ID for one of the user's account groups.",
@@ -1982,6 +1988,7 @@
           "channel": "new_channel",
           "interval": 45,
           "floating_interval": true,
+          "account_priority": "random",
           "preferred_account_group": 0
         }
       },
