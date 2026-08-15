@@ -458,12 +458,27 @@
         }
       ],
       "post": {
-        "summary": "Prolong",
+        "summary": "Prolong purchase",
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/ProlongObject"
+              },
+              "examples": {
+                "hours": {
+                  "summary": "Extend by an exact number of hours",
+                  "value": {
+                    "hours": 24
+                  }
+                },
+                "legacyCount": {
+                  "summary": "Legacy tariff-unit request",
+                  "value": {
+                    "count": 1
+                  }
+                }
               }
             }
           }
@@ -1720,12 +1735,32 @@
       },
       "ProlongObject": {
         "type": "object",
+        "description": "Provide `hours` (preferred) or the deprecated `count`. Limits depend on the original tariff: hourly — 24 hours (1 day), daily — 168 hours (7 days), weekly — 672 hours (4 weeks), monthly — 1440 hours (30 days).",
+        "anyOf": [
+          {
+            "required": ["hours"]
+          },
+          {
+            "required": ["count"]
+          }
+        ],
         "properties": {
+          "hours": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Exact extension duration in hours. The per-order maximum depends on the original tariff and can be lower than the global maximum shown here.",
+            "example": 24,
+            "minimum": 1,
+            "maximum": 1440
+          },
           "count": {
             "type": "integer",
-            "description": "The count of the prolong (if tarif hourly - count of hours, else - count of days)",
+            "format": "int32",
+            "deprecated": true,
+            "description": "Deprecated compatibility field. Number of original tariff units: hours for an hourly tariff, days for a daily tariff, weeks for a weekly tariff, and 30-day months for a monthly tariff. Maximum count: hourly — 24, daily — 7, weekly — 4, monthly — 2. Use `hours` for new integrations.",
             "example": 1,
-            "minimum": 1
+            "minimum": 1,
+            "maximum": 24
           }
         }
       },
