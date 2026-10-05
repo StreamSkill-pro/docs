@@ -1,0 +1,8 @@
+---
+title: 'Quote viewers upgrade'
+openapi: 'POST /purchases/{orderId}/upgrade-viewers/quote'
+---
+
+`target_viewers` is the new total viewer limit. To increase an order from 100 to 200 viewers, send `200`.
+
+To apply the upgrade, call [Upgrade viewers](/api-reference/endpoints/purchases/actions/upgrade-viewers) with the same `target_viewers` and the returned `amount` as `max_amount`. The final cost is recalculated when you apply the upgrade.

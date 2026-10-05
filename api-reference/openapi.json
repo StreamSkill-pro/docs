@@ -511,6 +511,142 @@
         }
       }
     },
+    "/purchases/{orderId}/upgrade-viewers/quote": {
+      "parameters": [
+        {
+          "name": "orderId",
+          "in": "path",
+          "required": true,
+          "description": "ID of the order to upgrade.",
+          "schema": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1
+          }
+        },
+        {
+          "$ref": "#/components/parameters/Accept-Language"
+        }
+      ],
+      "post": {
+        "summary": "Quote viewers upgrade",
+        "description": "Get the cost of increasing the viewer limit for the remaining order time. This request does not charge your balance or change the order.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpgradeViewersQuoteRequest"
+              },
+              "example": {
+                "target_viewers": 200
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Estimated upgrade cost.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpgradeViewersQuote"
+                },
+                "example": {
+                  "to_viewers": 200,
+                  "remaining_seconds": 3600,
+                  "amount": 12.5,
+                  "currency": "usd"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "405": {
+            "$ref": "#/components/responses/NotAllowed"
+          },
+          "409": {
+            "$ref": "#/components/responses/PurchaseDone"
+          },
+          "422": {
+            "$ref": "#/components/responses/validationError"
+          }
+        }
+      }
+    },
+    "/purchases/{orderId}/upgrade-viewers": {
+      "parameters": [
+        {
+          "name": "orderId",
+          "in": "path",
+          "required": true,
+          "description": "ID of the order to upgrade.",
+          "schema": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1
+          }
+        },
+        {
+          "$ref": "#/components/parameters/Accept-Language"
+        }
+      ],
+      "post": {
+        "summary": "Upgrade viewers",
+        "description": "Increase the viewer limit for the remaining order time. Use max_amount to set the maximum charge.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpgradeViewersRequest"
+              },
+              "example": {
+                "target_viewers": 200,
+                "max_amount": 12.5
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Viewer limit increased successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpgradeViewersResult"
+                },
+                "example": {
+                  "to_viewers": 200,
+                  "remaining_seconds": 3600,
+                  "amount": 12.5,
+                  "currency": "usd",
+                  "payment_id": 12346,
+                  "status": "completed"
+                }
+              }
+            }
+          },
+          "402": {
+            "$ref": "#/components/responses/InsufficientFunds"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "405": {
+            "$ref": "#/components/responses/NotAllowed"
+          },
+          "409": {
+            "$ref": "#/components/responses/ViewersUpgradeConflict"
+          },
+          "422": {
+            "$ref": "#/components/responses/validationError"
+          }
+        }
+      }
+    },
     "/purchases/{orderId}/edit-chatbot": {
       "parameters": [
         {
@@ -990,6 +1126,40 @@
       }
     },
     "responses": {
+      "ViewersUpgradeConflict": {
+        "description": "The order is already completed (already_done), or the upgrade cost exceeds max_amount (price_changed). For price_changed, no upgrade is applied; request a new quote.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorObject"
+            },
+            "examples": {
+              "priceChanged": {
+                "summary": "Cost exceeds max_amount",
+                "value": {
+                  "error_code": "price_changed",
+                  "name": "The price has changed since the quote was calculated. Refresh the quote and try again.",
+                  "message": "The price has changed since the quote was calculated. Refresh the quote and try again.",
+                  "code": 0,
+                  "status": 409,
+                  "type": "price_changed_exception"
+                }
+              },
+              "completedOrder": {
+                "summary": "Order already completed",
+                "value": {
+                  "error_code": "already_done",
+                  "name": "Order already completed",
+                  "message": "Order already completed",
+                  "code": 0,
+                  "status": 409,
+                  "type": "purchase_done"
+                }
+              }
+            }
+          }
+        }
+      },
       "default": {
         "description": "OK",
         "headers": {
@@ -1707,6 +1877,99 @@
               "current_balance": {
                 "type": "number",
                 "description": "Available account balance in the same currency."
+              }
+            }
+          }
+        ]
+      },
+      "UpgradeViewersQuoteRequest": {
+        "type": "object",
+        "required": [
+          "target_viewers"
+        ],
+        "properties": {
+          "target_viewers": {
+            "type": "integer",
+            "description": "New total viewer limit. For example, send 200 to increase from 100 to 200 viewers. Must exceed the current limit and stay within the maximum allowed for the order.",
+            "example": 200
+          }
+        }
+      },
+      "UpgradeViewersRequest": {
+        "type": "object",
+        "required": [
+          "target_viewers"
+        ],
+        "properties": {
+          "target_viewers": {
+            "type": "integer",
+            "description": "New total viewer limit. For example, send 200 to increase from 100 to 200 viewers. Must exceed the current limit and stay within the maximum allowed for the order.",
+            "example": 200
+          },
+          "max_amount": {
+            "type": "number",
+            "minimum": 0,
+            "nullable": true,
+            "description": "Maximum amount you agree to pay, in the quoted currency. If the cost exceeds this limit, the API returns 409 price_changed without applying the upgrade. Omit or pass null for no spending limit.",
+            "example": 12.5
+          }
+        }
+      },
+      "UpgradeViewersQuote": {
+        "type": "object",
+        "required": [
+          "to_viewers",
+          "remaining_seconds",
+          "amount",
+          "currency"
+        ],
+        "properties": {
+          "to_viewers": {
+            "type": "integer",
+            "description": "New total viewer limit.",
+            "example": 200
+          },
+          "remaining_seconds": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Remaining order time in seconds.",
+            "example": 3600
+          },
+          "amount": {
+            "type": "number",
+            "minimum": 0.01,
+            "description": "Cost of the upgrade in the returned currency, including discounts.",
+            "example": 12.5
+          },
+          "currency": {
+            "$ref": "#/components/schemas/CurrencyObject"
+          }
+        }
+      },
+      "UpgradeViewersResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/UpgradeViewersQuote"
+          },
+          {
+            "type": "object",
+            "required": [
+              "payment_id",
+              "status"
+            ],
+            "properties": {
+              "payment_id": {
+                "type": "integer",
+                "description": "ID of the upgrade payment.",
+                "example": 12346
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "completed"
+                ],
+                "description": "Status of the upgrade payment, not the original order.",
+                "example": "completed"
               }
             }
           }
