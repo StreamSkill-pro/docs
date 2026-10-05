@@ -1378,7 +1378,7 @@
         }
       },
       "NotFound": {
-        "description": "Object not Found",
+        "description": "The requested resource was not found or is not accessible.",
         "headers": {
           "Date": {
             "$ref": "#/components/headers/Date"
@@ -1405,17 +1405,18 @@
               "type": "object"
             },
             "example": {
-              "name": "Purchase not found",
+              "error_code": "not_found",
+              "name": "Record not found.",
+              "message": "Record not found.",
               "code": 0,
-              "message": "Object not found: {ID}",
               "status": 404,
-              "type": "purchase_not_found_exception"
+              "type": "record_not_found_exception"
             }
           }
         }
       },
       "NotAllowed": {
-        "description": "Action is not allowed for specified purchase",
+        "description": "This action is unavailable for the order.",
         "headers": {
           "Date": {
             "$ref": "#/components/headers/Date"
@@ -1442,8 +1443,9 @@
               "type": "object"
             },
             "example": {
-              "name": "Method Not Allowed",
-              "message": "Action is unavailable for this order",
+              "error_code": "not_supported",
+              "name": "Action is not available for this order",
+              "message": "Action is not available for this order",
               "code": 0,
               "status": 405,
               "type": "action_unavailable"
@@ -1452,7 +1454,7 @@
         }
       },
       "PurchaseDone": {
-        "description": "Action could not be completed because the purchase is already done",
+        "description": "The order is already completed.",
         "headers": {
           "Date": {
             "$ref": "#/components/headers/Date"
@@ -1479,7 +1481,8 @@
               "type": "object"
             },
             "example": {
-              "name": "Purchase Done",
+              "error_code": "already_done",
+              "name": "Order already completed",
               "message": "Order already completed",
               "code": 0,
               "status": 409,
@@ -1489,7 +1492,7 @@
         }
       },
       "ApiError": {
-        "description": "API Error (Internal Server Error)",
+        "description": "An unexpected error occurred.",
         "headers": {
           "Date": {
             "$ref": "#/components/headers/Date"
@@ -1516,8 +1519,9 @@
               "type": "object"
             },
             "example": {
-              "name": "Action failed",
-              "message": "Action not performed",
+              "error_code": "server_error",
+              "name": "An unexpected error occurred.",
+              "message": "An unexpected error occurred.",
               "code": 0,
               "status": 500,
               "type": "action_failed"
@@ -1526,7 +1530,7 @@
         }
       },
       "InsufficientFunds": {
-        "description": "Insufficient Funds",
+        "description": "Insufficient balance.",
         "headers": {
           "Date": {
             "$ref": "#/components/headers/Date"
@@ -1553,7 +1557,8 @@
               "type": "object"
             },
             "example": {
-              "name": "Insufficient Funds",
+              "error_code": "insufficient_funds",
+              "name": "Insufficient funds",
               "message": "Insufficient funds",
               "code": 0,
               "status": 402,
@@ -1565,7 +1570,7 @@
         }
       },
       "Unauthorized": {
-        "description": "Unauthorized",
+        "description": "A valid API key is required.",
         "headers": {
           "Date": {
             "$ref": "#/components/headers/Date"
@@ -1592,7 +1597,8 @@
               "type": "object"
             },
             "example": {
-              "name": "Unauthorized",
+              "error_code": "unauthorized",
+              "name": "Your request was made with invalid credentials.",
               "message": "Your request was made with invalid credentials.",
               "code": 0,
               "status": 401,
