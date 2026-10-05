@@ -1296,28 +1296,37 @@
         "content": {
           "application/json": {
             "schema": {
-              "type": "object"
+              "$ref": "#/components/schemas/ValidationErrorObject"
             },
             "examples": {
               "missingIds": {
-                "summary": "Missing ids or unsupported format",
+                "summary": "Missing IDs",
                 "value": {
-                  "name": "Validation Error",
+                  "error_code": "validation_error",
+                  "name": "The ids field is required.",
+                  "message": "The ids field is required.",
+                  "code": 0,
+                  "status": 422,
+                  "type": "validate_exception",
                   "errors": {
                     "ids": [
-                      "You must provide comma-separated order IDs."
+                      "The ids field is required."
                     ]
-                  },
-                  "status": 422,
-                  "type": "validate_exception"
+                  }
                 }
               },
               "invalidIds": {
-                "summary": "Invalid IDs",
+                "summary": "Non-integer ID",
                 "value": {
+                  "error_code": "validation_error",
+                  "name": "The ids.0 field must be an integer.",
+                  "message": "The ids.0 field must be an integer.",
+                  "code": 0,
+                  "status": 422,
+                  "type": "validate_exception",
                   "errors": {
-                    "ids": [
-                      "Order IDs must be numbers."
+                    "ids.0": [
+                      "The ids.0 field must be an integer."
                     ]
                   }
                 }
@@ -1325,9 +1334,15 @@
               "tooManyIds": {
                 "summary": "More than 100 IDs",
                 "value": {
+                  "error_code": "validation_error",
+                  "name": "The ids field must not have more than 100 items.",
+                  "message": "The ids field must not have more than 100 items.",
+                  "code": 0,
+                  "status": 422,
+                  "type": "validate_exception",
                   "errors": {
                     "ids": [
-                      "Maximum number of orders is 100."
+                      "The ids field must not have more than 100 items."
                     ]
                   }
                 }
@@ -1361,18 +1376,20 @@
         "content": {
           "application/json": {
             "schema": {
-              "type": "object"
+              "$ref": "#/components/schemas/ValidationErrorObject"
             },
             "example": {
-              "name": "Bad Request",
-              "errors": {
-                "tarif.id": [
-                  "Tarif not found"
-                ]
-              },
+              "error_code": "validation_error",
+              "name": "The Channel field is required.",
+              "message": "The Channel field is required.",
               "code": 0,
               "status": 422,
-              "type": "validate_exception"
+              "type": "validate_exception",
+              "errors": {
+                "channel": [
+                  "The Channel field is required."
+                ]
+              }
             }
           }
         }
@@ -1554,7 +1571,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "type": "object"
+              "$ref": "#/components/schemas/InsufficientFundsErrorObject"
             },
             "example": {
               "error_code": "insufficient_funds",
@@ -1645,6 +1662,55 @@
             "description": "Error type."
           }
         }
+      },
+      "ValidationErrorObject": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ErrorObject"
+          },
+          {
+            "type": "object",
+            "required": [
+              "errors"
+            ],
+            "properties": {
+              "errors": {
+                "type": "object",
+                "description": "Validation messages grouped by field name. Nested fields may use dot notation, such as ids.0.",
+                "additionalProperties": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "InsufficientFundsErrorObject": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ErrorObject"
+          },
+          {
+            "type": "object",
+            "required": [
+              "required_balance",
+              "current_balance"
+            ],
+            "properties": {
+              "required_balance": {
+                "type": "number",
+                "description": "Amount required to complete the operation."
+              },
+              "current_balance": {
+                "type": "number",
+                "description": "Available account balance in the same currency."
+              }
+            }
+          }
+        ]
       },
       "LanguageObject": {
         "type": "string",
