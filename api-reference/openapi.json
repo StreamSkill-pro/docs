@@ -1402,7 +1402,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "type": "object"
+              "$ref": "#/components/schemas/ErrorObject"
             },
             "example": {
               "error_code": "not_found",
@@ -1440,7 +1440,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "type": "object"
+              "$ref": "#/components/schemas/ErrorObject"
             },
             "example": {
               "error_code": "not_supported",
@@ -1478,7 +1478,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "type": "object"
+              "$ref": "#/components/schemas/ErrorObject"
             },
             "example": {
               "error_code": "already_done",
@@ -1516,7 +1516,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "type": "object"
+              "$ref": "#/components/schemas/ErrorObject"
             },
             "example": {
               "error_code": "server_error",
@@ -1594,7 +1594,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "type": "object"
+              "$ref": "#/components/schemas/ErrorObject"
             },
             "example": {
               "error_code": "unauthorized",
@@ -1609,6 +1609,43 @@
       }
     },
     "schemas": {
+      "ErrorObject": {
+        "type": "object",
+        "required": [
+          "error_code",
+          "name",
+          "message",
+          "code",
+          "status",
+          "type"
+        ],
+        "properties": {
+          "error_code": {
+            "type": "string",
+            "description": "Error identifier for handling the response in your application."
+          },
+          "name": {
+            "type": "string",
+            "description": "Localized error message; equal to message."
+          },
+          "message": {
+            "type": "string",
+            "description": "Localized explanation of the error."
+          },
+          "code": {
+            "type": "integer",
+            "description": "Error code, usually 0."
+          },
+          "status": {
+            "type": "integer",
+            "description": "HTTP status code."
+          },
+          "type": {
+            "type": "string",
+            "description": "Error type."
+          }
+        }
+      },
       "LanguageObject": {
         "type": "string",
         "enum": [
