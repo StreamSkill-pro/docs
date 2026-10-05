@@ -9,4 +9,4 @@ openapi: 'POST /purchases/{orderId}/upgrade-viewers'
 
 If the cost exceeds `max_amount`, the API returns `409 price_changed` without applying the upgrade. Request a new quote before trying again. Omit `max_amount` or pass `null` to allow the upgrade without a spending limit.
 
-The upgrade increases the viewer limit without extending the order duration. In the response, `status: "completed"` refers to the upgrade payment; the original order can continue running.
+The new viewer limit also applies to future renewals. The upgrade does not extend the order duration. In the response, `status: "completed"` refers to the upgrade payment; the original order can continue running.

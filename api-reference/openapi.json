@@ -530,7 +530,7 @@
       ],
       "post": {
         "summary": "Quote viewers upgrade",
-        "description": "Get the cost of increasing the viewer limit for the remaining order time. This request does not charge your balance or change the order.",
+        "description": "Get the cost of increasing an order's viewer limit. The cost is based on the order's remaining time. This request does not charge your balance or change the order.",
         "requestBody": {
           "required": true,
           "content": {
@@ -595,7 +595,7 @@
       ],
       "post": {
         "summary": "Upgrade viewers",
-        "description": "Increase the viewer limit for the remaining order time. Use max_amount to set the maximum charge.",
+        "description": "Increase an order's viewer limit. Use max_amount to set the maximum charge.",
         "requestBody": {
           "required": true,
           "content": {
