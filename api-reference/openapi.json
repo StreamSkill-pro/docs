@@ -151,6 +151,56 @@
         }
       }
     },
+    "/purchases/quote": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/Accept-Language"
+        }
+      ],
+      "post": {
+        "summary": "Quote purchase",
+        "description": "Calculate the order cost with your account's discounts and currency, without creating an order or charging your balance.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PurchaseQuoteRequest"
+              },
+              "example": {
+                "tarif": {
+                  "id": 1,
+                  "quantity": 150,
+                  "duration": 2
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Order total, including discounts.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PurchaseQuote"
+                },
+                "example": {
+                  "amount": 260.82,
+                  "currency": "rub"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "422": {
+            "$ref": "#/components/responses/validationError"
+          }
+        }
+      }
+    },
     "/purchases/create": {
       "parameters": [
         {
@@ -2030,6 +2080,36 @@
           "discount": {
             "type": "integer",
             "example": 5
+          }
+        }
+      },
+      "PurchaseQuoteRequest": {
+        "type": "object",
+        "required": [
+          "tarif"
+        ],
+        "description": "Same tariff fields as purchase creation. No channel required. Also accepts the tariff alias and dotted keys.",
+        "properties": {
+          "tarif": {
+            "$ref": "#/components/schemas/TarifObject"
+          }
+        }
+      },
+      "PurchaseQuote": {
+        "type": "object",
+        "required": [
+          "amount",
+          "currency"
+        ],
+        "properties": {
+          "amount": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Total after discounts, rounded to two decimal places. Zero for trial tariffs.",
+            "example": 260.82
+          },
+          "currency": {
+            "$ref": "#/components/schemas/CurrencyObject"
           }
         }
       },

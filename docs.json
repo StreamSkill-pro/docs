@@ -42,6 +42,7 @@
               "api-reference/endpoints/purchases/uncompleted",
               "api-reference/endpoints/purchases/bulk",
               "api-reference/endpoints/purchases/purchase",
+              "api-reference/endpoints/purchases/quote",
               "api-reference/endpoints/purchases/create",
               {
                 "group": "Actions",

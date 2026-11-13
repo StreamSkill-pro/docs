@@ -1,0 +1,10 @@
+---
+title: 'Quote purchase'
+openapi: 'POST /purchases/quote'
+---
+
+Send the same `tarif` fields as [Create purchase](/api-reference/endpoints/purchases/create), without `channel`. The `tariff` alias and dotted keys such as `tarif.id` are also accepted.
+
+Quotes are available with an empty balance.
+
+The price is recalculated at checkout.
