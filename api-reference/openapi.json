@@ -2554,7 +2554,7 @@
           "pricing_type": {
             "type": "string",
             "enum": ["standard", "graduated"],
-            "description": "Pricing model. `standard` — price is calculated as (base_price / count * quantity * duration * discounts). `graduated` — fixed price per quantity tier * duration * discounts.",
+            "description": "Pricing model. `standard` — selectable quantities are priced by summing the cost of each quantity range with its own discount. Duration and the effective user discount are applied to the resulting amount. `graduated` — fixed price for the selected quantity tier, with duration and the effective user discount applied.",
             "example": "graduated"
           },
           "graduated_prices": {
@@ -2568,7 +2568,7 @@
           },
           "discounts": {
             "type": "object",
-            "description": "Volume discount tiers (quantity threshold → discount percentage). Only applicable for standard pricing.",
+            "description": "Quantity discount tiers (threshold → discount percentage). For standard tariffs with selectable quantities, each threshold is the first unit receiving that discount, through the unit before the next threshold. Earlier units retain their own discounts. Only applicable for standard pricing.",
             "additionalProperties": {
               "type": "integer"
             },

@@ -4,9 +4,21 @@ Each tariff has a `pricing_type` field that indicates how the price is calculate
 
 ### Standard pricing (`pricing_type: "standard"`)
 
-Price is calculated as: `base_price / count * quantity * duration * volume_discount * personal_discount`
+For tariffs with a selectable quantity (`count` contains `min` and `max`), the price is the sum of the costs of each quantity range.
 
-Use the `discounts` field to get volume discount tiers.
+The `discounts` field maps the **first unit number** in a range to its discount percentage. A discount applies from that unit up to the unit before the next threshold. Reaching a new threshold does not change the cost of earlier units.
+
+For example, with a base unit price of **1** and `discounts: {"1": 0, "100": 10}`, ordering 150 units for one hour or one tariff period, before any user-specific discount, costs:
+
+- Units 1–99: `99 × 1 = 99`
+- Units 100–150: `51 × 1 × 0.90 = 45.90`
+- Total: **144.90**
+
+For hourly tariffs, multiply the amount by the number of hours. The server then applies the effective user discount and rounds the final total to two decimal places.
+
+<Note>
+  For tariffs with a selectable quantity, the API's `price` is the rounded total for `count.min`, for one hour or one tariff period, with applicable discounts already included. The base unit price used in the example is not exposed as a separate field in the tariff response.
+</Note>
 
 ### Graduated pricing (`pricing_type: "graduated"`)
 
