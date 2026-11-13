@@ -2170,14 +2170,13 @@
           },
           "quantity": {
             "type": "integer",
-            "description": "The quantity of the tarif (if tarif supports custom quantity)",
+            "description": "Defaults to the tariff's quantity. Allowed values depend on the tariff.",
             "example": 1000,
-            "minimum": 1,
-            "maximum": 10000
+            "minimum": 1
           },
           "duration": {
             "type": "integer",
-            "description": "The duration of the tarif (if tarif supports custom duration or is hourly)",
+            "description": "Hours for hourly tariffs; defaults to 1. For other tariffs, omit or set to 1.",
             "example": 24,
             "minimum": 1,
             "maximum": 24,
@@ -2618,7 +2617,7 @@
           },
           "price": {
             "type": "number",
-            "description": "The calculated price (with all discounts applied). For standard pricing — price for default quantity. For graduated pricing — price for the minimum tier.",
+            "description": "Discounted price for the default quantity. Use POST /purchases/quote for other quantities or durations.",
             "example": 135
           },
           "type": {
@@ -2634,7 +2633,7 @@
           "pricing_type": {
             "type": "string",
             "enum": ["standard", "graduated"],
-            "description": "Pricing model. `standard` — selectable quantities are priced by summing the cost of each quantity range with its own discount. Duration and the effective user discount are applied to the resulting amount. `graduated` — fixed price for the selected quantity tier, with duration and the effective user discount applied.",
+            "description": "`standard`: selectable quantities are priced by range. `graduated`: a fixed price for the selected quantity tier.",
             "example": "graduated"
           },
           "graduated_prices": {
@@ -2648,7 +2647,7 @@
           },
           "discounts": {
             "type": "object",
-            "description": "Quantity discount tiers (threshold → discount percentage). For standard tariffs with selectable quantities, each threshold is the first unit receiving that discount, through the unit before the next threshold. Earlier units retain their own discounts. Only applicable for standard pricing.",
+            "description": "For standard tariffs with selectable quantities, each threshold starts a discount range ending just before the next threshold. Earlier units keep their discounts.",
             "additionalProperties": {
               "type": "integer"
             },
