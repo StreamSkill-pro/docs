@@ -187,7 +187,7 @@
                 },
                 "example": {
                   "amount": 260.82,
-                  "currency": "rub"
+                  "currency": "usd"
                 }
               }
             }
@@ -2088,7 +2088,7 @@
         "required": [
           "tarif"
         ],
-        "description": "Same tariff fields as purchase creation. No channel required. Also accepts the tariff alias and dotted keys.",
+        "description": "Same tariff fields as purchase creation. Also accepts the tariff alias and dotted keys.",
         "properties": {
           "tarif": {
             "$ref": "#/components/schemas/TarifObject"
@@ -2105,7 +2105,7 @@
           "amount": {
             "type": "number",
             "minimum": 0,
-            "description": "Total after discounts, rounded to two decimal places. Zero for trial tariffs.",
+            "description": "Total after discounts, rounded to two decimal places.",
             "example": 260.82
           },
           "currency": {
