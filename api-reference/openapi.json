@@ -2572,6 +2572,158 @@
           "201": 270
         }
       },
+      "TariffPricingObject": {
+        "description": "Base prices and applicable discounts for your account. Prices are per hour when hourly is true, otherwise per tariff period. Calculate the subtotal for the selected type, multiply by duration and (1 - discount / 100), then round to two decimal places. Use duration = 1 when hourly is false. Paid orders have a minimum total of 0.01. Use POST /purchases/quote for the payable total.",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/StandardPricingObject"
+          },
+          {
+            "$ref": "#/components/schemas/FixedPricingObject"
+          },
+          {
+            "$ref": "#/components/schemas/GraduatedPricingObject"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "standard": "#/components/schemas/StandardPricingObject",
+            "fixed": "#/components/schemas/FixedPricingObject",
+            "graduated": "#/components/schemas/GraduatedPricingObject"
+          }
+        }
+      },
+      "StandardPricingObject": {
+        "title": "Standard",
+        "type": "object",
+        "required": [
+          "type",
+          "currency",
+          "price_per_unit",
+          "quantity_discounts",
+          "discount"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "standard"
+            ]
+          },
+          "currency": {
+            "$ref": "#/components/schemas/CurrencyObject"
+          },
+          "price_per_unit": {
+            "type": "number",
+            "description": "Price of one unit before quantity and account discounts."
+          },
+          "quantity_discounts": {
+            "type": "object",
+            "description": "Quantity discount percentages for your account. Each threshold is the first unit in a range ending just before the next threshold. Sum each range's units × price_per_unit × (1 - range_discount / 100) to get the subtotal. An empty object means no quantity discount.",
+            "additionalProperties": {
+              "type": "integer"
+            }
+          },
+          "discount": {
+            "type": "integer",
+            "description": "Effective discount percentage for your account and this tariff, including promotions. Use the returned value as-is. Excludes quantity discounts. Apply once; do not add /me.discount.",
+            "minimum": 0,
+            "maximum": 90
+          }
+        },
+        "example": {
+          "type": "standard",
+          "currency": "usd",
+          "price_per_unit": 1,
+          "quantity_discounts": {
+            "1": 0,
+            "100": 10
+          },
+          "discount": 10
+        }
+      },
+      "FixedPricingObject": {
+        "title": "Fixed",
+        "type": "object",
+        "required": [
+          "type",
+          "currency",
+          "price",
+          "discount"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "fixed"
+            ]
+          },
+          "currency": {
+            "$ref": "#/components/schemas/CurrencyObject"
+          },
+          "price": {
+            "type": "number",
+            "description": "Price of the whole fixed-quantity package before discount. This is the subtotal; do not multiply by quantity. Quantity discounts do not apply."
+          },
+          "discount": {
+            "type": "integer",
+            "description": "Effective discount percentage for your account and this tariff, including promotions. Use the returned value as-is. Excludes quantity discounts. Apply once; do not add /me.discount.",
+            "minimum": 0,
+            "maximum": 90
+          }
+        },
+        "example": {
+          "type": "fixed",
+          "currency": "usd",
+          "price": 100,
+          "discount": 10
+        }
+      },
+      "GraduatedPricingObject": {
+        "title": "Graduated",
+        "type": "object",
+        "required": [
+          "type",
+          "currency",
+          "graduated_prices",
+          "discount"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "graduated"
+            ]
+          },
+          "currency": {
+            "$ref": "#/components/schemas/CurrencyObject"
+          },
+          "graduated_prices": {
+            "type": "object",
+            "description": "Base prices for selectable quantity tiers, before discount. Keys are quantity thresholds. The subtotal is the price at the highest threshold not exceeding the requested quantity, or the first tier if none matches. Do not sum tiers or multiply by quantity. Quantity discounts do not apply.",
+            "additionalProperties": {
+              "type": "number"
+            }
+          },
+          "discount": {
+            "type": "integer",
+            "description": "Effective discount percentage for your account and this tariff, including promotions. Use the returned value as-is. Excludes quantity discounts. Apply once; do not add /me.discount.",
+            "minimum": 0,
+            "maximum": 90
+          }
+        },
+        "example": {
+          "type": "graduated",
+          "currency": "usd",
+          "graduated_prices": {
+            "0": 100,
+            "101": 150,
+            "201": 200
+          },
+          "discount": 10
+        }
+      },
       "TarifResponseObject": {
         "type": "object",
         "properties": {
@@ -2583,7 +2735,7 @@
           "title": {
             "type": "string",
             "description": "The title of the tarif (localized)",
-            "example": "AI Chatbot"
+            "example": "Viewers"
           },
           "text": {
             "type": "array",
@@ -2591,10 +2743,11 @@
             "items": {
               "type": "string"
             },
-            "example": ["Up to 350 chatbots", "AI-powered chat"]
+            "example": ["Up to 1000 viewers"]
           },
           "count": {
             "description": "Quantity info. For custom_count tariffs returns {min, max}, otherwise a single integer.",
+            "example": {"min": 100, "max": 1000},
             "oneOf": [
               {
                 "type": "integer",
@@ -2605,11 +2758,11 @@
                 "properties": {
                   "min": {
                     "type": "integer",
-                    "example": 10
+                    "example": 100
                   },
                   "max": {
                     "type": "integer",
-                    "example": 350
+                    "example": 1000
                   }
                 }
               }
@@ -2617,13 +2770,14 @@
           },
           "price": {
             "type": "number",
-            "description": "Discounted price for the default quantity. Use POST /purchases/quote for other quantities or durations.",
-            "example": 135
+            "deprecated": true,
+            "description": "Legacy price for the default quantity and duration = 1, with discounts and rounding applied. Use pricing for base prices or POST /purchases/quote for an order total.",
+            "example": 89.91
           },
           "type": {
             "type": "string",
             "description": "The group_id of the tarif",
-            "example": "ai_chatbots"
+            "example": "viewers"
           },
           "hourly": {
             "type": "boolean",
@@ -2633,12 +2787,15 @@
           "pricing_type": {
             "type": "string",
             "enum": ["standard", "graduated"],
-            "description": "`standard`: selectable quantities are priced by range. `graduated`: a fixed price for the selected quantity tier.",
-            "example": "graduated"
+            "deprecated": true,
+            "description": "Legacy pricing type. Both standard and fixed packages report standard. Use pricing.type for the three pricing types.",
+            "example": "standard"
           },
           "graduated_prices": {
-            "description": "Graduated pricing tiers with discounts applied. `null` for standard pricing tariffs.",
+            "deprecated": true,
+            "description": "Legacy tier prices with discounts and rounding applied; null for other pricing types. Use pricing.graduated_prices for prices before discounts.",
             "nullable": true,
+            "example": null,
             "oneOf": [
               {
                 "$ref": "#/components/schemas/GraduatedPricesObject"
@@ -2647,13 +2804,13 @@
           },
           "discounts": {
             "type": "object",
-            "description": "For standard tariffs with selectable quantities, each threshold starts a discount range ending just before the next threshold. Earlier units keep their discounts.",
+            "deprecated": true,
+            "description": "Legacy quantity discount schedule. For standard tariffs, use pricing.quantity_discounts. Each threshold starts a range ending just before the next threshold; earlier units keep their discounts.",
             "additionalProperties": {
               "type": "integer"
             },
             "example": {
-              "1000": 20,
-              "500": 10,
+              "100": 10,
               "1": 0
             }
           },
@@ -2676,6 +2833,44 @@
             "type": "boolean",
             "description": "Whether the tarif supports panel",
             "example": true
+          },
+          "pricing": {
+            "$ref": "#/components/schemas/TariffPricingObject"
+          }
+        },
+        "example": {
+          "id": 1,
+          "title": "Viewers",
+          "text": [
+            "Up to 1000 viewers"
+          ],
+          "count": {
+            "min": 100,
+            "max": 1000
+          },
+          "price": 89.91,
+          "type": "viewers",
+          "hourly": true,
+          "pricing_type": "standard",
+          "graduated_prices": null,
+          "discounts": {
+            "100": 10,
+            "1": 0
+          },
+          "link": {
+            "prefix": "https://www.twitch.tv/",
+            "placeholder": "twitch"
+          },
+          "panel": true,
+          "pricing": {
+            "type": "standard",
+            "currency": "usd",
+            "price_per_unit": 1,
+            "quantity_discounts": {
+              "1": 0,
+              "100": 10
+            },
+            "discount": 10
           }
         }
       },

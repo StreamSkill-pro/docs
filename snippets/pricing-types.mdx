@@ -1,31 +1,89 @@
-## Pricing types
+## Pricing
 
-Use [Quote purchase](/api-reference/endpoints/purchases/quote) to get the order total.
+Use [POST /purchases/quote](/api-reference/endpoints/purchases/quote) to get the final order total. To calculate it yourself, use the tariff's `pricing` object and the rules below.
 
-### Standard pricing (`pricing_type: "standard"`)
+Prices are in `pricing.currency`, before discounts, for one hour (`hourly: true`) or one tariff period (`hourly: false`).
 
-For selectable quantities, `discounts` maps each range's first unit to a discount percentage. Each range ends just before the next threshold. Earlier units keep their price.
+| Type | Subtotal calculation |
+| --- | --- |
+| `standard` | Unit prices with separate quantity discounts for each range |
+| `fixed` | Price of a fixed-quantity package |
+| `graduated` | One price for the entire selected quantity, determined by its tier |
 
-With a unit price of **1** and `discounts: {"1": 0, "100": 10}`, 150 units for one hour or tariff period cost:
+`discount` is the effective percentage for your account and this tariff, including promotions. Use the returned value as-is. Quantity discounts are separate. Do not apply `/me.discount` again.
 
-- Units 1–99: `99 × 1 = 99`
-- Units 100–150: `51 × 1 × 0.90 = 45.90`
-- Total before user discounts: **144.90**
+For all three types, calculate the subtotal as described below, then:
 
-For hourly tariffs, multiply by the number of hours. The server then applies the effective user discount and rounds to two decimal places.
+```text
+total = round(subtotal × duration × (1 - discount / 100), 2)
+```
 
-For selectable quantities, the API's `price` already includes discounts for `count.min` and one hour or tariff period. The base unit price is not returned.
+**Use `duration = 1` when `hourly: false`.** In the request, omit `duration` or send `1`. For hourly tariffs, use the requested number of hours; omitting `duration` also defaults to `1`.
 
-### Graduated pricing (`pricing_type: "graduated"`)
+Round only the final total. Paid orders have a minimum total of `0.01`.
 
-`graduated_prices` maps quantity thresholds to prices with discounts included. Use the highest threshold that does not exceed the quantity.
+### Standard
 
-For `{"0": 135, "101": 180, "201": 270}`:
+`price_per_unit` is the base price of one unit. `quantity_discounts` maps each range's first unit to a discount percentage. A range ends just before the next threshold; earlier units keep their discount. The returned schedule reflects your account's terms. An empty object `{}` means no quantity discount.
 
-- 50 units cost **135**
-- 150 units cost **180**
-- 250 units cost **270**
+```json
+{
+  "type": "standard",
+  "currency": "usd",
+  "price_per_unit": 1,
+  "quantity_discounts": {"1": 0, "100": 10},
+  "discount": 10
+}
+```
 
-For hourly tariffs, multiply by the number of hours for an estimate. Tier prices are already rounded; use [Quote purchase](/api-reference/endpoints/purchases/quote) for the final total.
+```text
+subtotal = sum(units_in_range × price_per_unit × (1 - range_discount / 100))
+```
 
-The `discounts` field does not apply to graduated pricing.
+The first 99 units cost **1 USD each**; from the 100th unit onward, each costs **0.90 USD**. The discount does not reprice earlier units.
+
+For 150 units, the subtotal is: `99 × 1 + 51 × 1 × 0.90 = 144.90 USD`. With no quantity discounts, the subtotal is simply `quantity × price_per_unit`.
+
+### Fixed
+
+`price` covers the whole package. The tariff's `count` is fixed, so do not multiply by quantity. Quantity discounts do not apply.
+
+```json
+{
+  "type": "fixed",
+  "currency": "usd",
+  "price": 100,
+  "discount": 10
+}
+```
+
+```text
+subtotal = price
+```
+
+With `duration = 1`, the total is **90 USD**. For an hourly package, multiply by the requested hours before applying the discount.
+
+### Graduated
+
+`graduated_prices` maps quantity thresholds to prices for the entire selected quantity. Choose the highest threshold that does not exceed `quantity`. If the quantity is below every threshold, use the first tier. Do not add tier prices or multiply by quantity. Quantity discounts do not apply.
+
+```json
+{
+  "type": "graduated",
+  "currency": "usd",
+  "graduated_prices": {"0": 100, "101": 150, "201": 200},
+  "discount": 10
+}
+```
+
+```text
+subtotal = selected_tier_price
+```
+
+For 150 units, the subtotal is `150`. With `duration = 2` and `discount = 10`, the total is **270 USD**.
+
+### Legacy fields
+
+Top-level `price`, `pricing_type`, `graduated_prices` and `discounts` remain for compatibility. Use `pricing` for new integrations.
+
+Unlike the prices inside `pricing`, top-level `price` and `graduated_prices` already include discounts and rounding. `price` covers the default quantity with `duration = 1`. The old `pricing_type` reports `standard` for both standard and fixed tariffs.
